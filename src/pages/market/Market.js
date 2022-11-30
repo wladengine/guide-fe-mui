@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
 import Box from '@mui/material/Box';
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
 
 const Market = () => {
     const [realms, setRealms] = React.useState(null)
@@ -150,17 +155,22 @@ const Market = () => {
             ? null
             : foundClaims.map((val, index) => {
                 return (
-                    <tr key={index}>
-                        <td style={{ width: '50%' }} key={val.id}>
-                            <h6>
-                                [{val.product.short_name}] {val.product.name}
-                            </h6>
-                            {realmsParams == -1 ? <h6>{val.realm.description}</h6> : ''}
-                            Минимальная сумма: {val.fee.name}
-                            <h6>{val.clause}</h6>
-                            <hr />
-                        </td>
-                    </tr>
+                    <Card key={index}>
+                        <CardHeader
+                            subheader={`[${val.product.short_name}] ${val.product.name}`}
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="text.secondary">
+                                {realmsParams == -1 ? val.realm.description : ''}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Минимальная сумма: {val.fee.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {val.clause}
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 )
             })
     const foundClaimsCount =
@@ -218,19 +228,10 @@ const Market = () => {
                 </div>
             </div>
             <div className={'CRow'}>
-                <div className={'CCol'} xs={11}>
-                    <div className="ps-4 pb-2">
-                        <b>{foundClaimsCount}</b>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>{foundClaimsList}</tbody>
-                        </table>
-                    </div>
-                </div>
+                <Stack spacing={1}>
+                    <b>{foundClaimsCount}</b>
+                    {foundClaimsList}
+                </Stack>
             </div>
         </>
     )

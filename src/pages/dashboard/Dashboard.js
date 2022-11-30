@@ -1,6 +1,16 @@
 import React, { useEffect } from 'react'
 import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
+import Typography from "@mui/material/Typography";
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -151,29 +161,19 @@ const Dashboard = () => {
             ? null
             : groups.map((val, index) => {
                 const filteredParams = val.parameters.map((val_p, index_p) => {
-                    const htmlId = `checkBoxParam_${val_p.id}`
                     return (
-                        <div key={val_p.id} className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id={htmlId}
-                                onClick={(e) => {
-                                    updateFilterParams(val_p.id)
-                                }}
-                            />
-                            <label className="form-check-label" htmlFor={htmlId}>
-                                {val_p.name}
-                            </label>
-                        </div>
+                        <FormControlLabel
+                            key={val_p.id}
+                            label={val_p.name}
+                            control={<Switch size={"small"} onClick={(e) => { updateFilterParams(val_p.id) }} />}
+                        />
                     )
                 })
                 return (
-                    <div key={`prm_${index}`} className="ps-2 pb-2">
-                        <b>{val.name}</b>
-                        <>{filteredParams}</>
-                    </div>
+                    <Box key={`prm_${index}`} pt={2}>
+                        <FormLabel component="legend">{val.name}</FormLabel>
+                        {filteredParams}
+                    </Box>
                 )
             })
 
@@ -181,22 +181,12 @@ const Dashboard = () => {
         products == null
             ? null
             : products.map((val, index) => {
-                const htmlId = `checkBoxProd_${val.id}`
                 return (
-                    <div key={index} className="form-check">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id={htmlId}
-                            onClick={(e) => {
-                                updateProductParams(val.id)
-                            }}
-                        />
-                        <label className="form-check-label" htmlFor={htmlId}>
-                            {val.name}
-                        </label>
-                    </div>
+                    <FormControlLabel
+                        key={index}
+                        label={val.short_name}
+                        control={<Switch size={"small"} onClick={(e) => { updateProductParams(val.id) }} />}
+                    />
                 )
             })
 
@@ -206,7 +196,7 @@ const Dashboard = () => {
             : foundFeatures.map((val, index) => {
                 const rowHeader = (
                     <td style={{ width: '20%' }} key={val.id}>
-                        <h6>{val.parameter.name}</h6>
+                        <b>{val.parameter.name}</b>
                     </td>
                 )
                 const count = productParams.length
@@ -221,24 +211,24 @@ const Dashboard = () => {
                                 console.log(`val.product.id = ${val.product.id}, prod.id=${prod}`)
                                 const segmentsList =
                                     val.product.id != prod ? (
-                                        <div className={'card mb-2'}>
-                                            <div className={'card-body'}>
-                                                <span>Нет данных</span>
-                                            </div>
-                                        </div>
+                                        <Card>
+                                            <CardHeader subheader={'Нет данных'} />
+                                        </Card>
                                     ) : (
-                                        val.segments.map((val_seg, index) => {
+                                        val.segments.map((val_seg) => {
                                             return (
-                                                <div key={val_seg.id} className={'card mb-2'}>
-                                                    <div className={'card-body'}>
-                                                        <b href={`./#/show_segment?id=${val_seg.id}`}>
-                                                            {val_seg.document.short_name} {`ст. ${val_seg.article.number}`},{' '}
-                                                            {`п. ${val_seg.number}`}
-                                                        </b>
-                                                        <br />
-                                                        <p>{val_seg.text}</p>
-                                                    </div>
-                                                </div>
+                                                <Card key={val_seg.id}>
+                                                    <CardHeader
+                                                        subheader={`${val_seg.document.short_name} 
+                                                        ст. ${val_seg.article.number} 
+                                                        п. ${val_seg.number}`}
+                                                    />
+                                                    <CardContent>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {val_seg.text}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
                                             )
                                         })
                                     )
@@ -279,14 +269,13 @@ const Dashboard = () => {
     return (
         <Grid container spacing={2}>
             <Grid item xs={3}>
-                <div className="ps-2 pb-2">
-                    <b>Инструменты</b>
-                    <div className={'ps-2 pb-2'}>{productsList}</div>
-                </div>
-                <div className="ps-2 pb-2">
-                    <b>Характеристики</b>
-                    <>{paramsFiltersRows}</>
-                </div>
+                <FormLabel component="legend">Инструменты</FormLabel>
+                <FormGroup>
+                    {productsList}
+                </FormGroup>
+                <br />
+                <b>Характеристики</b>
+                {paramsFiltersRows}
             </Grid>
             <Grid item xs={9}>
                 <table>
