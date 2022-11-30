@@ -1,8 +1,9 @@
 import React from 'react'
+import css from './map.module.css'
 
 const Map = () => {
     return (
-        <iframe src={'map.html'} style={{ width: 600, height: 500 }}></iframe>
+        <iframe src={'map.html'} className={css.map}></iframe>
     )
 }
 

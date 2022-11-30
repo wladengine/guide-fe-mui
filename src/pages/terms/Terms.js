@@ -45,7 +45,10 @@ const Terms = () => {
                 return (
                     <tr key={index}>
                         <td>{value.name}</td>
-                        <td>{value.definition}</td>
+                        <td>
+                            <b>{value.document.short_name}:</b> <br />
+                            {value.definition}
+                        </td>
                     </tr>
                 )
             })
