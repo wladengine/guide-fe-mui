@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
+import ProductTimeline from "../../components/product-timeline/ProductTimeline";
 
 const Market = () => {
     const [realms, setRealms] = React.useState(null)
@@ -169,6 +170,7 @@ const Market = () => {
                             <Typography variant="body2" color="text.secondary">
                                 {val.clause}
                             </Typography>
+                            <ProductTimeline productId={val.product.id} />
                         </CardContent>
                     </Card>
                 )
