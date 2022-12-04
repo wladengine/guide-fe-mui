@@ -1,15 +1,8 @@
-const GetTimeline = (productId) => {
-    let type = GetType(productId);
-    return TypeData[type];
-}
+import React from "react";
 
-const GetType = (productId) => {
-    switch (productId){
-        case 1:
-            return 1;
-        default:
-            return 0;
-    }
+
+const GetTimeline = async (productId) => {
+    return (typeof data == 'undefined' || data == null) ? <b>Нет данных</b> : <WrappedBasicTimeline items={data}/>;
 }
 
 const TypeData = [
@@ -323,6 +316,5 @@ const TypeData = [
         ]
     }
 ]
-
 
 export default GetTimeline

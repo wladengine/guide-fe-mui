@@ -6,17 +6,19 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent, { timelineContentClasses } from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import GetTimeline from "../../utils/productTimelineDataProvider/ProductTimelineDataProvider";
 import Typography from "@mui/material/Typography";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CardHeader from "@mui/material/CardHeader";
+import Card from "@mui/material/Card";
 
-const ProductTimeline = ({ productId }) => {
-    const items = GetTimeline(productId);
-    console.log(items)
+const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
-    return (typeof items == 'undefined' || items === null) ? '' : <WrappedBasicTimeline items={items} />;
+const ProductTimeline = ({ data }) => {
+    return (typeof data == 'undefined' || data == null || data.length == 0) ?
+        <span>Нет данных</span> :
+        <WrappedBasicTimeline items={data}/>;
 }
 
 const WrappedBasicTimeline = ({ items }) => {
@@ -48,13 +50,13 @@ const WrappedBasicTimeline = ({ items }) => {
 }
 
 const BasicTimeLine = ({items}) => {
-    return items.timeline.map((item, index) => (
+    return items.map((item, index) => (
         <TimelineItem key={index}>
             <TimelineOppositeContent sx={{py: '12px', px: 2}}>
-                <Typography variant="h6" component="span">
-                    {`ч ${item.segment.number} ст. ${item.segment.article.number} ${item.segment.article.document.short_name}`}
+                <Typography variant="body1" component="b" color={'red'}>
+                    {`ч ${item.segment.number} ст. ${item.segment.article.number} ${item.segment.document.short_name}`}
                 </Typography>
-                <Typography>{item.stageDescription}</Typography>
+                <Typography>{item.name}</Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
                 <TimelineConnector/>
@@ -68,7 +70,7 @@ const BasicTimeLine = ({items}) => {
                 variant="body2"
                 color="text.secondary"
             >
-                {item.termsDescription}
+                {item.dates}
             </TimelineContent>
         </TimelineItem>
     ));

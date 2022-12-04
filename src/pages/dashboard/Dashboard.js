@@ -18,6 +18,7 @@ const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
     const [products, setProducts] = React.useState(null)
     const [foundFeatures, setFoundFeatures] = React.useState(null)
+    const [timelines, setTimelines] = React.useState([])
     const [filterParams, setFilterParams] = React.useState([])
     const [productParams, setProductParams] = React.useState([])
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
@@ -67,9 +68,6 @@ const Dashboard = () => {
         setProductParams([])
     }, [])
     useEffect(() => {
-        console.log(
-            `call filterFeatures(): productParams = ${typeof productParams}, filterParams = ${typeof filterParams}`,
-        )
         if (typeof productParams == 'undefined' || typeof filterParams == 'undefined') {
             console.log(`typeof productParams = ${typeof productParams}`)
             console.log(`typeof filterParams = ${typeof filterParams}`)
@@ -77,7 +75,6 @@ const Dashboard = () => {
             console.log(`productParams = ${productParams}`)
             console.log(`filterParams = ${filterParams}`)
         } else {
-            console.log(`productParams = ${[...productParams]}`)
             let urlDocumentFilters = ''
             let urlParamsFilters = ''
             let hasValidFilters = false
@@ -97,7 +94,6 @@ const Dashboard = () => {
                 setFoundFeatures(null)
                 return
             }
-            console.log(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`)
             fetch(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`, {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 mode: 'cors',
@@ -118,11 +114,28 @@ const Dashboard = () => {
                 })
         }
     }, [filterParams, productParams])
+    useEffect(() => {
+        fetch(`${baseUrl}/stages`, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setTimelines(data);
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [])
 
     const updateFilterParams = (paramId) => {
-        console.log(
-            `call updateFilterParams(${paramId}): filterParams = ${filterParams}, ${typeof filterParams}`,
-        )
         if (typeof filterParams == 'undefined') {
             console.log(`updateFilterParams(${filterParams}): typeof filterParams == 'undefined'`)
         } else if (filterParams == null) {
@@ -131,16 +144,11 @@ const Dashboard = () => {
             setFilterParams([])
         } else if (filterParams.includes(paramId)) {
             setFilterParams([...filterParams.filter((element) => element !== paramId)])
-            console.log(`updateFilterParams(${filterParams}): removed element`)
         } else {
             setFilterParams([...filterParams, paramId])
-            console.log(
-                `updateFilterParams(${filterParams}): added element. ${[...filterParams, paramId]}`,
-            )
         }
     }
     const updateProductParams = (paramId) => {
-        console.log('updateProductParams(', paramId)
         if (typeof productParams == 'undefined') {
             console.log(`updateProductParams(${productParams}): typeof productParams == 'undefined'`)
         } else if (productParams == null) {
@@ -149,13 +157,15 @@ const Dashboard = () => {
             setProductParams([])
         } else if (productParams.includes(paramId)) {
             setProductParams([...productParams.filter((element) => element !== paramId)])
-            console.log(`updateProductParams(${productParams}): removed element`)
         } else {
             setProductParams([...productParams, paramId])
-            console.log(
-                `updateProductParams(${filterParams}): added element. ${[...productParams, paramId]}`,
-            )
         }
+    }
+
+    const GetTimelinesByProduct = (productId) => {
+        const filtered = timelines.filter((t) => t.product.id == productId);
+        //console.log(filtered);
+        return filtered;
     }
 
     const paramsFiltersRows =
@@ -256,7 +266,6 @@ const Dashboard = () => {
                 .filter((x) => x > 0)
                 .map((val, index) => {
                     const value = products.find((x) => x.id == val)
-                    console.log(`finding product.id = ${val} = ${value}`)
                     return <th className={css.topContent} key={index}>{value.short_name}</th>
                 })
         ) : (
@@ -274,11 +283,12 @@ const Dashboard = () => {
             productParams
                 .filter((x) => x > 0)
                 .map((val, index) => {
+                    const data = GetTimelinesByProduct(val);
                     return (
                         <td key={index} style={{ verticalAlign: "top", padding: 5, minWidth: 450 }}>
                             <Card>
                                 <CardContent>
-                                    <ProductTimeline productId={val} />
+                                    <ProductTimeline data={data} />
                                 </CardContent>
                             </Card>
                         </td>
@@ -289,8 +299,10 @@ const Dashboard = () => {
     const WrappedProductTimelines =
         productParams.filter((x) => x > 0).length > 0 && products != null ?
             <tfoot>
-                <td style={{ verticalAlign: "top", padding: 5 }}><b>Этапы исполнения</b></td>
-                {selectedProductTimelines}
+                <tr>
+                    <td style={{ verticalAlign: "top", padding: 5 }}><b>Этапы исполнения</b></td>
+                    {selectedProductTimelines}
+                </tr>
             </tfoot> : ''
 
     return (
