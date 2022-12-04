@@ -11,6 +11,8 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
 import Typography from "@mui/material/Typography";
+import ProductTimeline from "../../components/product-timeline/ProductTimeline";
+import css from './dashboard.module.css'
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -195,12 +197,13 @@ const Dashboard = () => {
             ? null
             : foundFeatures.map((val, index) => {
                 const rowHeader = (
-                    <td style={{ width: '20%' }} key={val.id}>
+                    <td style={{ width: '20%', verticalAlign: "top", padding: 5 }} key={val.id}>
                         <b>{val.parameter.name}</b>
                     </td>
                 )
                 const count = productParams.length
-                let ColWidth = `${(100 - 20) / count}%`
+                //const ColWidth = `${(100 - 20) / count}%`
+                const ColWidth = `70%`
                 const documentList =
                     val.segments == null || count == 0
                         ? null
@@ -233,7 +236,7 @@ const Dashboard = () => {
                                         })
                                     )
                                 return (
-                                    <td key={id} style={{ width: ColWidth }}>
+                                    <td key={id} style={{ width: ColWidth, verticalAlign: "top", padding: 5 }}>
                                         <b>{prod.short_name}</b>
                                         {segmentsList}
                                     </td>
@@ -254,10 +257,10 @@ const Dashboard = () => {
                 .map((val, index) => {
                     const value = products.find((x) => x.id == val)
                     console.log(`finding product.id = ${val} = ${value}`)
-                    return <th key={index}>{value.short_name}</th>
+                    return <th className={css.topContent} key={index}>{value.short_name}</th>
                 })
         ) : (
-            <td>
+            <td className={css.topContent}>
                 <div className={'card'}>
                     <div className={'card-body'}>
                         <h4>Нет данных</h4>
@@ -265,6 +268,30 @@ const Dashboard = () => {
                 </div>
             </td>
         )
+
+    const selectedProductTimelines =
+        productParams.filter((x) => x > 0).length > 0 && products != null ? (
+            productParams
+                .filter((x) => x > 0)
+                .map((val, index) => {
+                    return (
+                        <td key={index} style={{ verticalAlign: "top", padding: 5, minWidth: 450 }}>
+                            <Card>
+                                <CardContent>
+                                    <ProductTimeline productId={val} />
+                                </CardContent>
+                            </Card>
+                        </td>
+                    )
+                })
+        ) : ''
+
+    const WrappedProductTimelines =
+        productParams.filter((x) => x > 0).length > 0 && products != null ?
+            <tfoot>
+                <td style={{ verticalAlign: "top", padding: 5 }}><b>Этапы исполнения</b></td>
+                {selectedProductTimelines}
+            </tfoot> : ''
 
     return (
         <Grid container spacing={2}>
@@ -286,6 +313,7 @@ const Dashboard = () => {
                     </tr>
                     </thead>
                     <tbody>{foundFeaturesList}</tbody>
+                    {WrappedProductTimelines}
                 </table>
             </Grid>
         </Grid>
