@@ -170,7 +170,6 @@ const Market = () => {
                             <Typography variant="body2" color="text.secondary">
                                 {val.clause}
                             </Typography>
-                            <ProductTimeline productId={val.product.id} />
                         </CardContent>
                     </Card>
                 )
