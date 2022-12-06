@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid';
 import Typography from "@mui/material/Typography";
 import ProductTimeline from "../../components/product-timeline/ProductTimeline";
 import css from './dashboard.module.css'
+import Stack from "@mui/material/Stack";
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -178,6 +179,7 @@ const Dashboard = () => {
                             key={val_p.id}
                             label={val_p.name}
                             control={<Switch size={"small"} onClick={(e) => { updateFilterParams(val_p.id) }} />}
+                            sx={{ pb: 0.75 }}
                         />
                     )
                 })
@@ -196,48 +198,69 @@ const Dashboard = () => {
                 return (
                     <FormControlLabel
                         key={index}
-                        label={val.short_name}
+                        label={val.name}
                         control={<Switch size={"small"} onClick={(e) => { updateProductParams(val.id) }} />}
+                        sx={{ pb: 0.75 }}
                     />
                 )
             })
 
+    const GetAllUniqueParameters = () => {
+        const returnVal = foundFeatures == null
+            ? null
+            : [...new Set(foundFeatures.map((elem) => { return elem.parameter }))];
+        console.log(returnVal, 'GetAllUniqueParameters');
+        return returnVal;
+    }
+
+    const GetSegmentsByParam = (paramId, productId) => {
+        const returnVal = foundFeatures == null
+            ? null
+            : foundFeatures
+                .filter((elem) => elem.parameter.id == paramId && elem.product.id == productId)
+                .map((x) => x.segments).flat();
+        console.log(returnVal, 'GetSegmentsByParam');
+        return returnVal;
+    }
+
     const foundFeaturesList =
         foundFeatures == null
             ? null
-            : foundFeatures.map((val, index) => {
+            : GetAllUniqueParameters().map((val, index) => {
                 const rowHeader = (
                     <td style={{ width: '20%', verticalAlign: "top", padding: 5 }} key={val.id}>
-                        <b>{val.parameter.name}</b>
+                        <b>{val.name}</b>
                     </td>
                 )
                 const count = productParams.length
                 //const ColWidth = `${(100 - 20) / count}%`
                 const ColWidth = `70%`
                 const documentList =
-                    val.segments == null || count == 0
+                    count == 0
                         ? null
                         : productParams
                             .filter((x) => x > 0)
                             .map((prod, index) => {
                                 const id = `prod_${prod}_${index}`
-                                console.log(`val.product.id = ${val.product.id}, prod.id=${prod}`)
+                                console.log(`val.product.id = ${val.id}, prod.id=${prod}`)
+                                const segments = GetSegmentsByParam(val.id, prod);
                                 const segmentsList =
-                                    val.product.id != prod ? (
+                                    segments == null || segments.length == 0 ? (
                                         <Card>
                                             <CardHeader subheader={'Нет данных'} />
                                         </Card>
                                     ) : (
-                                        val.segments.map((val_seg) => {
+                                        segments.map((val_seg) => {
+                                            console.log(val_seg, 'val_seg');
                                             return (
                                                 <Card key={val_seg.id}>
                                                     <CardHeader
-                                                        subheader={`${val_seg.document.short_name} 
+                                                        subheader={`ч. ${val_seg.number}  
                                                         ст. ${val_seg.article.number} 
-                                                        п. ${val_seg.number}`}
+                                                        ${val_seg.document.short_name}`}
                                                     />
                                                     <CardContent>
-                                                        <Typography variant="body2" color="text.secondary">
+                                                        <Typography variant="body2" color="text.secondary" style={{whiteSpace: "pre-line"}}>
                                                             {val_seg.text}
                                                         </Typography>
                                                     </CardContent>
@@ -248,7 +271,7 @@ const Dashboard = () => {
                                 return (
                                     <td key={id} style={{ width: ColWidth, verticalAlign: "top", padding: 5 }}>
                                         <b>{prod.short_name}</b>
-                                        {segmentsList}
+                                        <Stack spacing={1}>{segmentsList}</Stack>
                                     </td>
                                 )
                             })
