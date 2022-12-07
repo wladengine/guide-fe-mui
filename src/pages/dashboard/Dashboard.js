@@ -208,8 +208,9 @@ const Dashboard = () => {
     const GetAllUniqueParameters = () => {
         const returnVal = foundFeatures == null
             ? null
-            : [...new Set(foundFeatures.map((elem) => { return elem.parameter }))];
-        console.log(returnVal, 'GetAllUniqueParameters');
+            : foundFeatures.map((v) => v.parameter)
+                .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
+        //console.log(returnVal, 'GetAllUniqueParameters');
         return returnVal;
     }
 
@@ -219,7 +220,7 @@ const Dashboard = () => {
             : foundFeatures
                 .filter((elem) => elem.parameter.id == paramId && elem.product.id == productId)
                 .map((x) => x.segments).flat();
-        console.log(returnVal, 'GetSegmentsByParam');
+        //console.log(returnVal, 'GetSegmentsByParam');
         return returnVal;
     }
 
@@ -242,7 +243,7 @@ const Dashboard = () => {
                             .filter((x) => x > 0)
                             .map((prod, index) => {
                                 const id = `prod_${prod}_${index}`
-                                console.log(`val.product.id = ${val.id}, prod.id=${prod}`)
+                                //console.log(`val.product.id = ${val.id}, prod.id=${prod}`)
                                 const segments = GetSegmentsByParam(val.id, prod);
                                 const segmentsList =
                                     segments == null || segments.length == 0 ? (
@@ -251,7 +252,7 @@ const Dashboard = () => {
                                         </Card>
                                     ) : (
                                         segments.map((val_seg) => {
-                                            console.log(val_seg, 'val_seg');
+                                            //console.log(val_seg, 'val_seg');
                                             return (
                                                 <Card key={val_seg.id}>
                                                     <CardHeader
