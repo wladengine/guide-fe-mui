@@ -164,7 +164,7 @@ const Dashboard = () => {
     }
 
     const GetTimelinesByProduct = (productId) => {
-        const filtered = timelines.filter((t) => t.product.id == productId);
+        const filtered = timelines.filter((t) => t.product.id == productId).sort((a, b) => a.number - b.number);
         //console.log(filtered);
         return filtered;
     }
@@ -210,7 +210,6 @@ const Dashboard = () => {
             ? null
             : foundFeatures.map((v) => v.parameter)
                 .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
-        //console.log(returnVal, 'GetAllUniqueParameters');
         return returnVal;
     }
 
@@ -220,7 +219,6 @@ const Dashboard = () => {
             : foundFeatures
                 .filter((elem) => elem.parameter.id == paramId && elem.product.id == productId)
                 .map((x) => x.segments).flat();
-        //console.log(returnVal, 'GetSegmentsByParam');
         return returnVal;
     }
 
@@ -234,7 +232,6 @@ const Dashboard = () => {
                     </td>
                 )
                 const count = productParams.length
-                //const ColWidth = `${(100 - 20) / count}%`
                 const ColWidth = `70%`
                 const documentList =
                     count == 0
@@ -243,7 +240,6 @@ const Dashboard = () => {
                             .filter((x) => x > 0)
                             .map((prod, index) => {
                                 const id = `prod_${prod}_${index}`
-                                //console.log(`val.product.id = ${val.id}, prod.id=${prod}`)
                                 const segments = GetSegmentsByParam(val.id, prod);
                                 const segmentsList =
                                     segments == null || segments.length == 0 ? (
@@ -256,9 +252,15 @@ const Dashboard = () => {
                                             return (
                                                 <Card key={val_seg.id}>
                                                     <CardHeader
-                                                        subheader={`ч. ${val_seg.number}  
-                                                        ст. ${val_seg.article.number} 
-                                                        ${val_seg.document.short_name}`}
+                                                        subheader={`${typeof val_seg.number == 'undefined' ? '' : `ч.${val_seg.number}`}  
+                                                        ${typeof val_seg.article.number == 'undefined' ? '' : `ст.${val_seg.article.number}`} 
+                                                        ${typeof val_seg.document.short_name == 'undefined' ? '' : val_seg.document.short_name}`}
+                                                        subheaderTypographyProps={{
+                                                            fontWeight: 600
+                                                        }}
+                                                        sx={{
+                                                            paddingBottom: 0
+                                                        }}
                                                     />
                                                     <CardContent>
                                                         <Typography variant="body2" color="text.secondary" style={{whiteSpace: "pre-line"}}>
