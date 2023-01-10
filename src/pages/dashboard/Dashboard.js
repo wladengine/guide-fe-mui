@@ -22,6 +22,7 @@ const Dashboard = () => {
     const [timelines, setTimelines] = React.useState([])
     const [filterParams, setFilterParams] = React.useState([])
     const [productParams, setProductParams] = React.useState([])
+    const [collapsedMenuItems, setCollapsedMenuItems] = React.useState([])
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
@@ -162,11 +163,27 @@ const Dashboard = () => {
             setProductParams([...productParams, paramId])
         }
     }
+    const updateCollapsedMenuItems = (paramId) => {
+        if (typeof collapsedMenuItems == 'undefined') {
+            console.log(`updateCollapsedMenuItems(${paramId}): typeof collapsedMenuItems == 'undefined'`)
+        } else if (collapsedMenuItems == null) {
+            console.log(`updateCollapsedMenuItems(${paramId}): collapsedMenuItems == ${collapsedMenuItems}`)
+        } else if (typeof collapsedMenuItems == 'number' && collapsedMenuItems == paramId) {
+            setCollapsedMenuItems([])
+        } else if (collapsedMenuItems.includes(paramId)) {
+            setCollapsedMenuItems([...collapsedMenuItems.filter((element) => element !== paramId)])
+        } else {
+            setCollapsedMenuItems([...collapsedMenuItems, paramId])
+        }
+    }
 
     const GetTimelinesByProduct = (productId) => {
         const filtered = timelines.filter((t) => t.product.id == productId).sort((a, b) => a.number - b.number);
-        //console.log(filtered);
         return filtered;
+    }
+
+    const GetIsCollapsedMenuItem = (itemId) => {
+        return collapsedMenuItems.includes(itemId);
     }
 
     const paramsFiltersRows =
@@ -183,10 +200,23 @@ const Dashboard = () => {
                         />
                     )
                 })
+                let prmId = `prm_${index}`;
+                const isCollapsedMenuItem = GetIsCollapsedMenuItem(prmId);
+                const boxContent =
+                    isCollapsedMenuItem
+                        ? <>
+                            <Typography
+                                style={{cursor: "pointer"}}
+                                onClick={() => updateCollapsedMenuItems(prmId)}>скрыть</Typography>
+                            {filteredParams}
+                        </>
+                        : <Typography
+                            style={{cursor: "pointer"}}
+                            onClick={() => updateCollapsedMenuItems(prmId)}>раскрыть</Typography>
                 return (
-                    <Box key={`prm_${index}`} pt={2}>
+                    <Box key={prmId} pt={2}>
                         <FormLabel component="legend">{val.name}</FormLabel>
-                        {filteredParams}
+                        {boxContent}
                     </Box>
                 )
             })
@@ -311,7 +341,7 @@ const Dashboard = () => {
                 .map((val, index) => {
                     const data = GetTimelinesByProduct(val);
                     return (
-                        <td key={index} style={{ verticalAlign: "top", padding: 5, minWidth: 450 }}>
+                        <td key={index} style={{ verticalAlign: "top", padding: 5, minWidth: 500 }}>
                             <Card>
                                 <CardContent>
                                     <ProductTimeline data={data} />
@@ -331,13 +361,27 @@ const Dashboard = () => {
                 </tr>
             </tfoot> : ''
 
-    return (
-        <Grid container spacing={2}>
-            <Grid item xs={3}>
-                <FormLabel component="legend">Инструменты</FormLabel>
+    const productsFormGroup =
+        GetIsCollapsedMenuItem('productList')
+            ? <>
+                <Typography
+                    style={{cursor: "pointer"}}
+                    onClick={() => updateCollapsedMenuItems('productList')}>скрыть</Typography>
                 <FormGroup>
                     {productsList}
                 </FormGroup>
+            </>
+            : <>
+                <Typography
+                    style={{cursor: "pointer"}}
+                    onClick={() => updateCollapsedMenuItems('productList')}>раскрыть</Typography>
+            </>
+
+    return (
+        <Grid container spacing={2}>
+            <Grid item xs={3}>
+                <b>Инструменты</b>
+                {productsFormGroup}
                 <br />
                 <b>Характеристики</b>
                 {paramsFiltersRows}
