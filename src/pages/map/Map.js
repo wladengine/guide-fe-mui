@@ -1,9 +1,204 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import css from './map.module.css'
+import Box from "@mui/material/Box";
+import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+
+const SearchBlock = () => {
+    const baseUrl = 'http://487346.msk-kvm.ru:3333'
+    const [regions, setRegions] = React.useState(null)
+    const [foundObjects, setFoundObjects] = React.useState(null)
+    const [foundations, setFoundations] = React.useState(null)
+    const [regionParams, setRegionParams] = React.useState(-1)
+    const [foundationParams, setFoundationParams] = React.useState(-1)
+
+    useEffect(() => {
+        fetch(`${baseUrl}/regions`, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setRegions(data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [])
+    useEffect(() => {
+        fetch(`${baseUrl}/foundations`, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setFoundations(data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [])
+    useEffect(() => {
+        if (regionParams == null && foundationParams != null) {
+            setRegionParams(-1)
+        }
+        if (regionParams != null && foundationParams == null) {
+            setFoundationParams(-1)
+        }
+        if (regionParams != -1 || foundationParams != -1) {
+            let urlRegionFilters = ''
+            if (regionParams != -1) {
+                urlRegionFilters = `&region_id=${regionParams}`
+            }
+            let urlFoundationFilters = ''
+            if (foundationParams != -1) {
+                urlFoundationFilters = `&foundation_id=${foundationParams}`
+            }
+
+            let fetchUrl = `${baseUrl}/objects?${urlRegionFilters}${urlFoundationFilters}`
+            console.log(fetchUrl)
+            fetch(fetchUrl, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer',
+            })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    setFoundObjects(data)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        } else {
+            setFoundObjects(null)
+            console.log(`regionParams=${regionParams}, foundationParams=${foundationParams}; clearing found objects...`)
+        }
+    }, [regionParams, foundationParams])
+
+    const regionOptions =
+        regions && regions
+            .sort((a, b) => {
+                const nameA = a.name.toUpperCase()
+                const nameB = b.name.toUpperCase()
+                if (nameA < nameB) {
+                    return -1
+                }
+                if (nameA > nameB) {
+                    return 1
+                }
+                return 0
+            })
+            .map((val) => {
+                return {id: val.id, label: val.name}
+            })
+
+    const foundationOptions =
+        foundations && foundations
+            .sort((a, b) => {
+                const nameA = a.description.toUpperCase()
+                const nameB = b.description.toUpperCase()
+                if (nameA < nameB) {
+                    return -1
+                }
+                if (nameA > nameB) {
+                    return 1
+                }
+                return 0
+            })
+            .map((val) => {
+                return {id: val.id, label: val.description}
+            })
+
+    const foundObjectsList =
+        foundObjects && foundObjects.map((val, index) => {
+            return (
+                <Card key={index}>
+                    <CardContent>
+                        <Typography variant="body2" color="text.secondary">
+                            {val.region.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {val.foundation.description}
+                        </Typography>
+                        {
+                            val.town && <Typography variant="body2" color="text.secondary">
+                                {val.town}
+                            </Typography>
+                        }
+                        {
+                            val.link && <Typography variant="body2" color="text.secondary">
+                                {val.link}
+                            </Typography>
+                        }
+                    </CardContent>
+                </Card>
+            )
+        })
+    const foundObjectsCount =
+        foundObjects == null ? 'не найдено' : `найдено вариантов: ${foundObjects.length}`
+
+    return (
+        <>
+            <div>
+                <Box mb={2}>
+                    <AutocompleteCombobox
+                        id={'region'}
+                        label={'Выберите регион'}
+                        // showDebugInfo={true}
+                        options={regionOptions}
+                        onValueChanged={setRegionParams}
+                    />
+                </Box>
+                <Box mb={2}>
+                    <AutocompleteCombobox
+                        id={'foundation'}
+                        label={'Выберите форму'}
+                        // showDebugInfo={true}
+                        options={foundationOptions}
+                        onValueChanged={setFoundationParams}
+                    />
+                </Box>
+            </div>
+            <div>
+                <Stack spacing={1}>
+                    <b>{foundObjectsCount}</b>
+                    {foundObjectsList}
+                </Stack>
+            </div>
+        </>
+    )
+}
 
 const Map = () => {
     return (
-        <iframe src={'map.html'} className={css.map}></iframe>
+        <>
+            <iframe src={'map.html'} className={css.map}></iframe>
+            <SearchBlock />
+        </>
     )
 }
 

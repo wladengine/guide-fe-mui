@@ -114,9 +114,7 @@ const Market = () => {
     ]
 
     const realmsOptions =
-        realms == null
-            ? null
-            : realms
+        realms && realms
                 .sort((a, b) => {
                     const nameA = a.description.toUpperCase()
                     const nameB = b.description.toUpperCase()
@@ -133,9 +131,7 @@ const Market = () => {
                 })
 
     const actorsOptions =
-        actors == null
-            ? null
-            : actors
+        actors && actors
                 .sort((a, b) => {
                     const nameA = a.name.toUpperCase()
                     const nameB = b.name.toUpperCase()
@@ -152,9 +148,7 @@ const Market = () => {
                 })
 
     const foundClaimsList =
-        foundClaims == null
-            ? null
-            : foundClaims.map((val, index) => {
+        foundClaims && foundClaims.map((val, index) => {
                 return (
                     <Card key={index}>
                         <CardHeader

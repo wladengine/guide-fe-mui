@@ -16,7 +16,11 @@ export default function AutocompleteCombobox({id, label, options, showDebugInfo,
                 onChange={(event, newValue) => {
                     setValue(newValue);
                     if (onValueChanged != null) {
-                        onValueChanged(newValue.id);
+                        if (newValue === null){
+                            onValueChanged(null);
+                        } else {
+                            onValueChanged(newValue.id);
+                        }
                     }
                 }}
                 inputValue={inputValue}
