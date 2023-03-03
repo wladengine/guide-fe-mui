@@ -10,10 +10,12 @@ import Main from "./pages/main/Main";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Map from "./pages/map/Map";
 import Terms from "./pages/terms/Terms";
+import Timelines from "./pages/timelines/Timelines";
 
 const sections = [
     { title: 'Главная', url: '/' },
     { title: 'Сравнение инвест.инструментов', url: '/dashboard' },
+    { title: 'Этапы исполнения', url: '/timelines' },
     { title: 'Глоссарий', url: '/terms' },
     { title: 'Карта', url: '/map' },
     { title: 'ИнвестМаркет', url: '/market' },
@@ -41,10 +43,11 @@ export default function App() {
                       <Route path={'/dashboard'} element={<Dashboard />} />
                       <Route path={'/map'} element={<Map />} />
                       <Route path={'/terms'} element={<Terms />} />
+                      <Route path={'/timelines'} element={<Timelines />} />
                   </Routes>
               </BrowserRouter>
           </Container>
-          <Footer />
+          <Footer description={''} title={''} />
       </ThemeProvider>
   );
 }
