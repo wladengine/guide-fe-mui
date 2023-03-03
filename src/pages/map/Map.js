@@ -7,6 +7,43 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import MapSearchResult from "../../components/map-search-result/MapSearchResult";
+
+function getRegionOptions(regions) {
+    return regions && regions
+        .sort((a, b) => {
+            const nameA = a.name.toUpperCase()
+            const nameB = b.name.toUpperCase()
+            if (nameA < nameB) {
+                return -1
+            }
+            if (nameA > nameB) {
+                return 1
+            }
+            return 0
+        })
+        .map((val) => {
+            return {id : val.id, label : val.name}
+        });
+}
+
+function getFoundationOptions(foundations) {
+    return foundations && foundations
+        .sort((a, b) => {
+            const nameA = a.description.toUpperCase()
+            const nameB = b.description.toUpperCase()
+            if (nameA < nameB) {
+                return -1
+            }
+            if (nameA > nameB) {
+                return 1
+            }
+            return 0
+        })
+        .map((val) => {
+            return {id : val.id, label : val.description}
+        });
+}
 
 const SearchBlock = () => {
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
@@ -99,64 +136,18 @@ const SearchBlock = () => {
         }
     }, [regionParams, foundationParams])
 
-    const regionOptions =
-        regions && regions
-            .sort((a, b) => {
-                const nameA = a.name.toUpperCase()
-                const nameB = b.name.toUpperCase()
-                if (nameA < nameB) {
-                    return -1
-                }
-                if (nameA > nameB) {
-                    return 1
-                }
-                return 0
-            })
-            .map((val) => {
-                return {id: val.id, label: val.name}
-            })
-
-    const foundationOptions =
-        foundations && foundations
-            .sort((a, b) => {
-                const nameA = a.description.toUpperCase()
-                const nameB = b.description.toUpperCase()
-                if (nameA < nameB) {
-                    return -1
-                }
-                if (nameA > nameB) {
-                    return 1
-                }
-                return 0
-            })
-            .map((val) => {
-                return {id: val.id, label: val.description}
-            })
+    const regionOptions = getRegionOptions(regions)
+    const foundationOptions = getFoundationOptions(foundations)
 
     const foundObjectsList =
         foundObjects && foundObjects.map((val, index) => {
-            return (
-                <Card key={index}>
-                    <CardContent>
-                        <Typography variant="body2" color="text.secondary">
-                            {val.region.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {val.foundation.description}
-                        </Typography>
-                        {
-                            val.town && <Typography variant="body2" color="text.secondary">
-                                {val.town}
-                            </Typography>
-                        }
-                        {
-                            val.link && <Typography variant="body2" color="text.secondary">
-                                {val.link}
-                            </Typography>
-                        }
-                    </CardContent>
-                </Card>
-            )
+            return (<MapSearchResult
+                key={index}
+                regionName={val.region.name}
+                foundationDescription={val.foundation.description}
+                town={val.town}
+                link={val.link}
+            />)
         })
     const foundObjectsCount =
         foundObjects == null ? 'не найдено' : `найдено вариантов: ${foundObjects.length}`
