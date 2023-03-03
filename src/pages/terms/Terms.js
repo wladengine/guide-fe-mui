@@ -39,26 +39,13 @@ const Terms = () => {
     }, [btnSearchClick])
 
     const termsRows =
-        terms == null
-            ? null
-            : terms.map((value, index) => {
+        terms && terms.map((value, index) => {
                 return <TermItem
                     key={index}
                     name={value.name}
                     definition={value.definition}
                     fz={value.document.short_name}
                 />
-                /*
-                return (
-                    <tr key={index}>
-                        <td>{value.name}</td>
-                        <td>
-                            <b>{value.document.short_name}:</b> <br />
-                            {value.definition}
-                        </td>
-                    </tr>
-                )
-                */
             })
 
     return (
@@ -77,6 +64,12 @@ const Terms = () => {
                         value={searchText}
                         onChange={(e) => {
                             setSearchText(e.target.value)
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                setBtnSearchClick(btnSearchClick + 1)
+                                e.preventDefault()
+                            }
                         }}
                     />
                     <IconButton

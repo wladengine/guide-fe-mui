@@ -18,15 +18,6 @@ const TermItem = ({name, definition, fz }) => {
                 </Typography>
             </CardContent>
         </Card>
-        /*
-        <tr>
-            <td>
-                <b>{name}:</b> <br />
-                {definition}
-            </td>
-            <td>{fz}</td>
-        </tr>
-         */
     )
 }
 
