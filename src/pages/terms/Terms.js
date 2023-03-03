@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import {InputBase, Paper} from "@mui/material";
+import TermItem from "../../components/term-item/TermItem";
+import Stack from "@mui/material/Stack";
 
 const Terms = () => {
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
@@ -42,6 +42,13 @@ const Terms = () => {
         terms == null
             ? null
             : terms.map((value, index) => {
+                return <TermItem
+                    key={index}
+                    name={value.name}
+                    definition={value.definition}
+                    fz={value.document.short_name}
+                />
+                /*
                 return (
                     <tr key={index}>
                         <td>{value.name}</td>
@@ -51,12 +58,13 @@ const Terms = () => {
                         </td>
                     </tr>
                 )
+                */
             })
 
     return (
         <Grid container spacing={2}>
             <Grid item xs={11} className="ms-4">
-                <h3>Глоссарий</h3>
+                <h3 style={{marginLeft: 12}}>Глоссарий</h3>
                 <Box
                     component="form"
                     sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
@@ -82,15 +90,9 @@ const Terms = () => {
                         <SearchIcon />
                     </IconButton>
                 </Box>
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Описание</th>
-                        </tr>
-                    </thead>
-                    <tbody>{termsRows}</tbody>
-                </table>
+                <Stack spacing={1} style={{marginLeft: 12, marginRight: 48, marginTop: 12}}>
+                    {termsRows}
+                </Stack>
             </Grid>
         </Grid>
     )
