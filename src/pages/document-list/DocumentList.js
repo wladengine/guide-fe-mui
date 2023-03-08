@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import DataGrid from '@mui/x-data-grid'
+import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
+import document from "../document/Document";
 
 const DocumentList = () => {
     const [documents, setDocuments] = React.useState(null)
@@ -27,45 +28,42 @@ const DocumentList = () => {
             })
     }, [])
 
-    const rows =
-        documents == null
-            ? null
-            : documents.map((val, index) => {
-                return (
-                    <CTableRow key={index}>
-                        <CTableHeaderCell scope="row"></CTableHeaderCell>
-                        <CTableDataCell>{val.short_name}</CTableDataCell>
-                        <CTableDataCell>{val.full_name}</CTableDataCell>
-                        <CTableDataCell>{val.date}</CTableDataCell>
-                        <CTableDataCell>
-                            <CButton href={`../#/document?id=${val.id}`} size="sm">
-                                Редактировать
-                            </CButton>
-                        </CTableDataCell>
-                    </CTableRow>
-                )
-            })
+    const columns = [
+        { field: 'fz', headerName: 'ФЗ', width: 100 },
+        { field: 'description', headerName: 'Описание', flex: 1 },
+        {
+            field: 'date',
+            headerName: 'Дата',
+            type: 'date',
+            width: 100,
+        }
+    ];
+    const exampleDoc = {
+        id: -1,
+        fz: "",
+        description: "",
+        date: new Date(0)
+    }
+    const rows = documents == null ? [exampleDoc] :
+        documents.map((val) => Object.create(exampleDoc, {
+            id: { value: val.id },
+            fz: { value: val.short_name },
+            description: { value: val.full_name },
+            date: { value: new Date(val.date) }
+        }))
+
+    const onCreateNewRecordHandler = () => { window.location.href = `./document?id=-1` }
+    const onDeleteRecordHandler = () => {}
+    const onEditRecordHandler = (id) => { window.location.href = `./document?id=${id}` }
+
     return (
-        <>
-            <Table>
-                <CTableHead>
-                    <CTableRow>
-                        <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">ФЗ</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Дата</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Описание</CTableHeaderCell>
-                    </CTableRow>
-                </CTableHead>
-                <CTableBody>{rows}</CTableBody>
-            </Table>
-            <CRow>
-                <CCol lg={4}>
-                    <CButton href={'./#/document?id=-1'} size="lg">
-                        Добавить
-                    </CButton>
-                </CCol>
-            </CRow>
-        </>
+        <CrudDataGrid
+            columns={columns}
+            rows={rows}
+            onCreateNewRecordHandler={onCreateNewRecordHandler}
+            onDeleteRecordHandler={onDeleteRecordHandler}
+            onEditRecordHandler={onEditRecordHandler}
+        />
     )
 }
 

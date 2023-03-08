@@ -11,6 +11,10 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Map from "./pages/map/Map";
 import Terms from "./pages/terms/Terms";
 import Timelines from "./pages/timelines/Timelines";
+import DocumentList from "./pages/document-list/DocumentList";
+import Document from "./pages/document/Document";
+import AuthContext from "./components/auth-context/AuthContext";
+import Admin from "./pages/admin/Admin";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -28,26 +32,48 @@ const sections = [
 const theme = createTheme();
 
 export default function App() {
-  return (
-      <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Container maxWidth="lg">
-              <Header
-                  title="Информационно-аналитическая система «Интерактивный справочник инвестора в публичные сферы»"
-                  sections={sections}
-              />
-              <BrowserRouter>
-                  <Routes>
-                      <Route path={'/'} element={<Main />} />
-                      <Route path={'/market'} element={<Market />} />
-                      <Route path={'/dashboard'} element={<Dashboard />} />
-                      <Route path={'/map'} element={<Map />} />
-                      <Route path={'/terms'} element={<Terms />} />
-                      <Route path={'/timelines'} element={<Timelines />} />
-                  </Routes>
-              </BrowserRouter>
-          </Container>
-          <Footer description={''} title={''} />
-      </ThemeProvider>
-  );
+    function getCookie(cname) {
+        let name = cname + '='
+        let decodedCookie = decodeURIComponent(document.cookie)
+        let ca = decodedCookie.split(';')
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i]
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1)
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length)
+            }
+        }
+        return ''
+    }
+    let token = getCookie('authToken')
+    const authToken = React.useState(token)
+    return (
+        <AuthContext.Provider value={authToken}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Container maxWidth="lg">
+                    <Header
+                        title="Информационно-аналитическая система «Интерактивный справочник инвестора в публичные сферы»"
+                        sections={sections}
+                    />
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path={'/'} element={<Main />} />
+                            <Route path={'/market'} element={<Market />} />
+                            <Route path={'/dashboard'} element={<Dashboard />} />
+                            <Route path={'/map'} element={<Map />} />
+                            <Route path={'/terms'} element={<Terms />} />
+                            <Route path={'/timelines'} element={<Timelines />} />
+                            <Route path={'/document-list'} element={<DocumentList />} />
+                            <Route path={'/document'} element={<Document />} />
+                            <Route path={'/admin'} element={<Admin />} />
+                        </Routes>
+                    </BrowserRouter>
+                </Container>
+                <Footer description={''} title={''} />
+            </ThemeProvider>
+        </AuthContext.Provider>
+    );
 }
