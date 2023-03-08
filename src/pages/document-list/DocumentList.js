@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import document from "../document/Document";
+import {Breadcrumbs, Link, Stack, Typography} from "@mui/material";
 
 const DocumentList = () => {
     const [documents, setDocuments] = React.useState(null)
@@ -57,13 +57,25 @@ const DocumentList = () => {
     const onEditRecordHandler = (id) => { window.location.href = `./document?id=${id}` }
 
     return (
-        <CrudDataGrid
-            columns={columns}
-            rows={rows}
-            onCreateNewRecordHandler={onCreateNewRecordHandler}
-            onDeleteRecordHandler={onDeleteRecordHandler}
-            onEditRecordHandler={onEditRecordHandler}
-        />
+        <Stack>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+                <Link underline="hover" color="inherit" href="/admin">
+                    Управление данными
+                </Link>
+                <Typography key="3" color="text.primary">
+                    Документы
+                </Typography>
+            </Breadcrumbs>
+            <h2>Документы</h2>
+            <CrudDataGrid
+                columns={columns}
+                rows={rows}
+                onCreateNewRecordHandler={onCreateNewRecordHandler}
+                onDeleteRecordHandler={onDeleteRecordHandler}
+                onEditRecordHandler={onEditRecordHandler}
+            />
+        </Stack>
+
     )
 }
 

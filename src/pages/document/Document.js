@@ -160,7 +160,7 @@ const Document = () => {
                             {name}
                         </Typography>
                     </Breadcrumbs>
-                    <h1>Документ</h1>
+                    <h2>Документ</h2>
                     <Grid item lg={12} md={12} sm={12}>
                         <FormControl fullWidth variant="standard">
                             <InputLabel htmlFor="document_name">
@@ -213,7 +213,7 @@ const Document = () => {
                         {isMessageUnauthorized && <MessageUnauthorized />}
                     </Grid>
                     <Grid item lg={12} md={12} sm={12}>
-                        <h6>Статьи</h6>
+                        <h4>Статьи</h4>
                         <CrudDataGrid
                             columns={columnsArticles}
                             rows={rowsArticles}
