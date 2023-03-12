@@ -6,7 +6,6 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
-import ProductTimeline from "../../components/product-timeline/ProductTimeline";
 
 const Market = () => {
     const [realms, setRealms] = React.useState(null)
@@ -58,17 +57,34 @@ const Market = () => {
             })
     }, [])
     useEffect(() => {
-        if (realmsParams != -1 || actorsParams != -1 || sumParams != 10) {
+        let realm_id = -1;
+        let actor_id = -1;
+
+        if (typeof realmsParams !== "undefined" || realmsParams == null) {
+            realm_id = -1;
+        }
+        else if (typeof realmsParams.id !== "undefined" || realmsParams.id == null) {
+            realm_id = -1;
+        }
+
+        if (typeof actorsParams !== "undefined" || actorsParams == null) {
+            actor_id = -1;
+        }
+        else if (typeof actorsParams.id !== "undefined" || actorsParams.id == null) {
+            actor_id = -1;
+        }
+
+        if (realm_id !== -1 || actor_id !== -1 || sumParams != 10) {
             let urlRealmsFilters = ''
-            if (realmsParams != -1) {
-                urlRealmsFilters = `&realm_id=${realmsParams}`
+            if (realm_id !== -1) {
+                urlRealmsFilters = `&realm_id=${realm_id}`
             }
             let urlActorsFilters = ''
-            if (actorsParams != -1) {
-                urlActorsFilters = `&actor_id=${actorsParams}`
+            if (actor_id !== -1) {
+                urlActorsFilters = `&actor_id=${actor_id}`
             }
             let urlSumParams = ''
-            if (sumParams != 10) {
+            if (sumParams !== 10) {
                 urlSumParams = `&max=${sumsValues[sumParams]}`
             }
             let fetchUrl = `${baseUrl}/claims?${urlRealmsFilters}${urlActorsFilters}${urlSumParams}`

@@ -41,7 +41,7 @@ function getFoundationOptions(foundations) {
             return 0
         })
         .map((val) => {
-            return {id : val.id, label : val.description}
+            return { id : val.id, label : val.description }
         });
 }
 
@@ -94,22 +94,32 @@ const SearchBlock = () => {
             })
     }, [])
     useEffect(() => {
-        if (regionParams == null && foundationParams != null) {
-            setRegionParams(-1)
+        // if (regionParams == null && foundationParams != null) {
+        //     setRegionParams({ id: -1 })
+        // }
+        // if (regionParams != null && foundationParams == null) {
+        //     setFoundationParams({ id: -1 })
+        // }
+        if (regionParams === null && foundationParams === null) {
+            setFoundObjects(null)
+            console.log(`regionParams=${regionParams}, foundationParams=${foundationParams}; clearing found objects...`)
         }
-        if (regionParams != null && foundationParams == null) {
-            setFoundationParams(-1)
-        }
-        if (regionParams != -1 || foundationParams != -1) {
+        else {
+            let hasFilters = false
             let urlRegionFilters = ''
-            if (regionParams != -1) {
-                urlRegionFilters = `&region_id=${regionParams}`
+            if (typeof regionParams !== "undefined" && regionParams !== null && typeof regionParams.id !== "undefined" && regionParams.id !== null && regionParams.id !== -1) {
+                urlRegionFilters = `&region_id=${regionParams.id}`
+                hasFilters = true
             }
             let urlFoundationFilters = ''
-            if (foundationParams != -1) {
-                urlFoundationFilters = `&foundation_id=${foundationParams}`
+            if (typeof foundationParams !== "undefined" && foundationParams !== null && typeof foundationParams.id !== "undefined" && foundationParams.id !== null && foundationParams.id !== -1) {
+                urlFoundationFilters = `&foundation_id=${foundationParams.id}`
+                hasFilters = true
             }
-
+            if (!hasFilters) {
+                setFoundObjects(null)
+                return
+            }
             let fetchUrl = `${baseUrl}/objects?${urlRegionFilters}${urlFoundationFilters}`
             console.log(fetchUrl)
             fetch(fetchUrl, {
@@ -130,9 +140,6 @@ const SearchBlock = () => {
                 .catch(function (error) {
                     console.log(error)
                 })
-        } else {
-            setFoundObjects(null)
-            console.log(`regionParams=${regionParams}, foundationParams=${foundationParams}; clearing found objects...`)
         }
     }, [regionParams, foundationParams])
 
