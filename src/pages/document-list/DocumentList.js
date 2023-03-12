@@ -38,14 +38,14 @@ const DocumentList = () => {
             width: 100,
         }
     ];
-    const exampleDoc = {
+    const templateRow = {
         id: -1,
         fz: "",
         description: "",
         date: new Date(0)
     }
-    const rows = documents == null ? [exampleDoc] :
-        documents.map((val) => Object.create(exampleDoc, {
+    const rows = documents == null ? [templateRow] :
+        documents.map((val) => Object.create(templateRow, {
             id: { value: val.id },
             fz: { value: val.short_name },
             description: { value: val.full_name },
