@@ -9,6 +9,7 @@ export default function Admin() {
                 <Stack spacing={2}>
                     <h2>Управление данными</h2>
                     <Button href={'./document-list'}>Документы</Button>
+                    <Button href={'./feature-list'}>Характеристики</Button>
                 </Stack>
             </Grid>
         </Grid>
