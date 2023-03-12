@@ -17,6 +17,7 @@ import AuthContext from "./components/auth-context/AuthContext";
 import Admin from "./pages/admin/Admin";
 import FeatureList from "./pages/feature-list/FeatureList";
 import Feature from "./pages/feature/Feature";
+import Login from "./pages/login/Login";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -69,6 +70,7 @@ export default function App() {
                             <Route path={'/terms'} element={<Terms />} />
                             <Route path={'/timelines'} element={<Timelines />} />
                             <Route path={'/admin'} element={<Admin />} />
+                            <Route path={'/login'} element={<Login />} />
                             <Route path={'/document-list'} element={<DocumentList />} />
                             <Route path={'/document'} element={<Document />} />
                             <Route path={'/feature-list'} element={<FeatureList />} />

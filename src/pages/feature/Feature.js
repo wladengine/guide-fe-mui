@@ -18,7 +18,7 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions,
+    DialogActions, Backdrop, CircularProgress,
 } from "@mui/material";
 import {
     CreateRounded,
@@ -29,220 +29,13 @@ import AutocompleteCombobox from "../../components/autocomplete-combobox/Autocom
 import PropTypes from 'prop-types';
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 
-// const style = {
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width: 400,
-//     bgcolor: 'background.paper',
-//     border: '2px solid #000',
-//     boxShadow: 24,
-//     pt: 2,
-//     px: 4,
-//     pb: 3,
-// };
-// function ChildModal() {
-//     const [open, setOpen] = React.useState(false);
-//     const [article, setArticle] = React.useState('')
-//     const [segment, setSegment] = React.useState('')
-//
-//     const [documents, setDocuments] = React.useState(null)
-//     const [articles, setArticles] = React.useState(null)
-//     const [segments, setSegments] = React.useState(null)
-//     useEffect(() => {
-//         fetch(`${baseUrl}/documents`, {
-//             method: 'GET',
-//             mode: 'cors',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             redirect: 'follow',
-//             referrerPolicy: 'no-referrer',
-//         })
-//             .then((response) => {
-//                 return response.json()
-//             })
-//             .then((data) => {
-//                 setDocuments(data)
-//             })
-//             .catch(function (error) {
-//                 console.log(error)
-//             })
-//     }, [])
-//     const handleOpen = () => {
-//         setOpen(true);
-//     };
-//     const handleClose = () => {
-//         setOpen(false);
-//     };
-//     const optionsDocuments = () =>
-//         documents && documents
-//             .sort((a, b) => {
-//                 const nameA = a.short_name.toUpperCase()
-//                 const nameB = b.short_name.toUpperCase()
-//                 if (nameA < nameB) {
-//                     return -1
-//                 }
-//                 if (nameA > nameB) {
-//                     return 1
-//                 }
-//                 return 0
-//             })
-//             .map((val) => ({id: val.id, label: val.short_name}))
-//     const optionsArticles = () =>
-//         articles && articles
-//             .sort((a, b) => {
-//                 const nameA = `ст. ${a.number} ${a.name}`
-//                 const nameB = `ст. ${b.number} ${b.name}`
-//                 if (nameA < nameB) {
-//                     return -1
-//                 }
-//                 if (nameA > nameB) {
-//                     return 1
-//                 }
-//                 return 0
-//             })
-//             .map((val) => ({id: val.id, label: `ст. ${val.number} ${val.name}`}))
-//     const optionsSegments = () =>
-//         segments && segments
-//             .sort((a, b) => {
-//                 const nameA = a.number.toUpperCase()
-//                 const nameB = b.number.toUpperCase()
-//                 if (nameA < nameB) {
-//                     return -1
-//                 }
-//                 if (nameA > nameB) {
-//                     return 1
-//                 }
-//                 return 0
-//             })
-//             .map((val) => ({id: val.id, label: `п. ${val.number}`}))
-//
-//
-//     const onChangeDocument = (id) => {
-//         setDocument(id)
-//         GetArticles(id)
-//     }
-//     const onChangeArticle = (id) => {
-//         setArticle(id)
-//         GetSegments(id)
-//     }
-//
-//
-//     const GetArticles = (documentId) => {
-//         setArticles(null)
-//         if (documentId == null) {
-//             documentId = document
-//         }
-//         fetch(`${baseUrl}/documents/${documentId}/articles`, {
-//             method: 'GET',
-//             mode: 'cors',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             redirect: 'follow',
-//             referrerPolicy: 'no-referrer',
-//         })
-//             .then((response) => {
-//                 return response.json()
-//             })
-//             .then((data) => {
-//                 setArticles(data)
-//                 setSegments(null)
-//             })
-//             .catch(function (error) {
-//                 console.log(error)
-//             })
-//     }
-//     const GetSegments = (articleId) => {
-//         if (articleId == null) {
-//             articleId = article
-//         }
-//         fetch(`${baseUrl}/articles/${articleId}/segments`, {
-//             method: 'GET',
-//             mode: 'cors',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             redirect: 'follow',
-//             referrerPolicy: 'no-referrer',
-//         })
-//             .then((response) => {
-//                 return response.json()
-//             })
-//             .then((data) => {
-//                 setSegments(data)
-//             })
-//             .catch(function (error) {
-//                 console.log(error)
-//             })
-//     }
-//
-//     const onSaveFeature = () => {
-//         const segmentId = parseInt(segment)
-//         console.log([...savedSegmentsIds, segmentId], 'savedSegmentsIds')
-//         if (!savedSegmentsIds.includes(segmentId)) {
-//             console.log('saving....')
-//             const doc = documents.find((x) => x.id == document)
-//             const art = articles.find((x) => x.id == article)
-//             const seg = segments.find((x) => x.id == segmentId)
-//             setSavedSegmentsIds([...savedSegmentsIds, seg.id])
-//             const segmentExtended = {
-//                 id: seg.id,
-//                 number: seg.number,
-//                 document: doc,
-//                 article: art,
-//             }
-//             setSavedSegments([...savedSegments, segmentExtended])
-//             handleClose()
-//         }
-//     }
-//
-//     return (
-//         <Modal
-//             open={open}
-//             onClose={handleClose}
-//             aria-labelledby="child-modal-title"
-//             aria-describedby="child-modal-description"
-//         >
-//             <Box sx={{ ...style, width: 400 }}>
-//                 <Stack>
-//                     <AutocompleteCombobox
-//                         id={'document'}
-//                         label={'Документ'}
-//                         onValueChanged={onChangeDocument}
-//                         options={optionsDocuments}
-//                     />
-//                     <AutocompleteCombobox
-//                         id={'article'}
-//                         label={'Статья'}
-//                         onValueChanged={onChangeArticle}
-//                         options={optionsArticles}
-//                     />
-//                     <AutocompleteCombobox
-//                         id={'segment'}
-//                         label={'Пункт'}
-//                         onValueChanged={(id) => {
-//                             setSegment(id)
-//                         }}
-//                         options={optionsSegments}
-//                     />
-//                     <Button onClick={onSaveFeature}>
-//                         Добавить
-//                     </Button>
-//                 </Stack>
-//             </Box>
-//         </Modal>
-//     );
-// }
 const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
 function AddSegmentDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
     const [value, setValue] = React.useState(valueProp);
-    const radioGroupRef = React.useRef(null);
 
     React.useEffect(() => {
         if (!open) {
@@ -385,12 +178,6 @@ function AddSegmentDialog(props) {
             })
     }
 
-    const handleEntering = () => {
-        if (radioGroupRef.current != null) {
-            radioGroupRef.current.focus();
-        }
-    };
-
     const handleCancel = () => {
         onClose();
     };
@@ -415,7 +202,6 @@ function AddSegmentDialog(props) {
         <Dialog
             sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
             maxWidth="xs"
-            TransitionProps={{ onEntering: handleEntering }}
             open={open}
             {...other}
         >
@@ -467,7 +253,8 @@ const Feature = () => {
     const [savedSegments, setSavedSegments] = React.useState(null)
     const [parameters, setParameters] = React.useState(null)
     const [products, setProducts] = React.useState(null)
-    const [open, setOpen] = React.useState(false);
+    const [addSegmentDialogVisible, setAddSegmentDialogVisible] = React.useState(false);
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
 
     const [authToken] = useContext(AuthContext)
 
@@ -581,13 +368,15 @@ const Feature = () => {
                 setId(data.id)
                 setIsSuccessfullySaved(true)
                 setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
+                window.location = `./feature?id=${data.id}`
             })
             .catch(function (error) {
                 console.log(error)
             })
     }
     const deleteFeature = () => {
-        console.log(authToken)
+        closeDeleteDialog();
+        backdropOpen();
         const requestOptions = {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/javascript', token: authToken },
@@ -595,33 +384,26 @@ const Feature = () => {
         }
         fetch(`${baseUrl}/features/${id}`, requestOptions)
             .then((response) => {
-                console.log(response)
                 if (!response.ok) {
                     if (response.status == '401') {
                         setIsMessageUnauthorized(true)
                     }
-                    console.log(response)
-                    console.log(response.status)
-                    alert('Error while delete feature')
-                    return null
+                    return false
                 }
-                return response.json()
+                return true
             })
-            .then((data) => {
-                setIsSuccessfullySaved(true)
-                afterDelete()
-                setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
-                setTimeout(
-                    () => {
-                        window.location = `./#/features`
-                    },
-                    6 * 1000,
-                    false,
-                )
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setIsSuccessfullySaved(true)
+                    // afterDelete()
+                    setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
+                    setTimeout(() => { window.location = `./feature-list` }, 6 * 1000, false)
+                }
             })
             .catch(function (error) {
                 console.log(error)
             })
+            .finally(() => backdropClose())
     }
 
     const [product, setProduct] = React.useState(null)
@@ -699,25 +481,48 @@ const Feature = () => {
                 }))
 
     const showAddSegmentDialog = () => {
-        setOpen(true);
+        setAddSegmentDialogVisible(true);
+    }
+    const showDeleteDialog = () => {
+        setDeleteDialogVisible(true);
+    }
+    const handleClose = () => {
+        setAddSegmentDialogVisible(false);
+    };
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
+    const deleteSegment = (id) => {
+        setSavedSegments(savedSegments.filter(item => item.id !== id))
+        setSavedSegmentsIds(savedSegmentsIds.filter(item => item !== id))
     }
 
-    const handleClose = (newValue) => {
-        setOpen(false);
+    const [backdropVisible, setBackdropVisible] = React.useState(false);
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
     };
 
     return <Grid container>
         <Grid item lg={12} md={12} sm={12}>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={backdropVisible}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Stack spacing={1}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     <Link underline="hover" color="inherit" href="/admin">
                         Управление данными
                     </Link>
                     <Link underline="hover" color="inherit" href="/feature-list">
-                        Документы
+                        Характеристики
                     </Link>
                     <Typography key="3" color="text.primary">
-                        {name}
+                        {id < 0 ? 'новая характеристика' : `${product?.label ?? ''} / ${parameter?.label ?? ''}`}
                     </Typography>
                 </Breadcrumbs>
                 <h2>Характеристика</h2>
@@ -769,59 +574,17 @@ const Feature = () => {
                     </Grid>
                     {
                         id > 0 &&
-                        <Grid item xs={4}>
-                            <Button
-                                type="button"
-                                className="btn btn-primary"
-                                data-coreui-toggle="modal"
-                                data-coreui-target="#staticBackdrop"
-                            >
+                        <Grid item xs={4} >
+                            <Button onClick={showDeleteDialog}>
                                 Удалить
                             </Button>
-                            {/*<Modal*/}
-                            {/*    className="modal fade"*/}
-                            {/*    id="staticBackdrop"*/}
-                            {/*    tabIndex="-1"*/}
-                            {/*    aria-labelledby="staticBackdropLabel"*/}
-                            {/*    aria-hidden="true"*/}
-                            {/*    onClick={onDeleteButton}*/}
-                            {/*>*/}
-                            {/*    <div className="modal-dialog">*/}
-                            {/*        <div className="modal-content">*/}
-                            {/*            <div className="modal-header">*/}
-                            {/*                <h5 className="modal-title" id="deleteModalLabel">*/}
-                            {/*                    Удаление*/}
-                            {/*                </h5>*/}
-                            {/*                <button*/}
-                            {/*                    type="button"*/}
-                            {/*                    className="btn-close"*/}
-                            {/*                    data-coreui-dismiss="modal"*/}
-                            {/*                    aria-label="Close"*/}
-                            {/*                ></button>*/}
-                            {/*            </div>*/}
-                            {/*            <div className="modal-body">*/}
-                            {/*                Удалить всю характеристику? Данное действие будет невозможно*/}
-                            {/*                отменить.*/}
-                            {/*            </div>*/}
-                            {/*            <div className="modal-footer">*/}
-                            {/*                <button*/}
-                            {/*                    type="button"*/}
-                            {/*                    className="btn btn-secondary"*/}
-                            {/*                    data-coreui-dismiss="modal"*/}
-                            {/*                >*/}
-                            {/*                    Отмена*/}
-                            {/*                </button>*/}
-                            {/*                <button*/}
-                            {/*                    type="button"*/}
-                            {/*                    className="btn btn-danger"*/}
-                            {/*                    onClick={deleteFeature}*/}
-                            {/*                >*/}
-                            {/*                    Удалить*/}
-                            {/*                </button>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</Modal>*/}
+                            <DialogActionConfirmation
+                                onOk={deleteFeature}
+                                onCancel={closeDeleteDialog}
+                                open={deleteDialogVisible}
+                            >
+                                Удалить всю характеристику? Данное действие будет невозможно отменить.
+                            </DialogActionConfirmation>
                         </Grid>
                     }
                 </Grid>
@@ -832,11 +595,12 @@ const Feature = () => {
                     columns={columnsSegments}
                     rows={rowsSegments}
                     onCreateNewRecordHandler={showAddSegmentDialog}
+                    onDeleteRecordHandler={deleteSegment}
                 />
                 <AddSegmentDialog
                     id="add-segment"
                     keepMounted
-                    open={open}
+                    open={addSegmentDialogVisible}
                     value={''}
                     onClose={onSaveFeature}
                 />

@@ -5,7 +5,7 @@ const MessageUnauthorized = () => {
     return (
         <Alert severity="error"
                action={
-                   <Button href={'./#/login'} color="inherit" size="small">
+                   <Button href={'./login'} color="inherit" size="small">
                        Войти
                    </Button>
                }>

@@ -43,7 +43,7 @@ const FeatureList = () => {
             id: { value: val.id },
             product: { value: val.product.short_name },
             parameter: { value: val.parameter.name },
-            segments: { value: val.segments.length }
+            segments: { value: val.segments?.length ?? 0 }
         }))
 
     const onCreateNewRecordHandler = () => { window.location.href = `./feature?id=-1` }
