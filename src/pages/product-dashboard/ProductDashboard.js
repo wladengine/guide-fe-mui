@@ -69,21 +69,25 @@ const ProductDashboard = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Grid item xs={11} className="ms-4">
-                <h3 style={{marginLeft: 12}}>Перечень инвестиционных инструментов</h3>
-                <Grid container>
-                    <Grid item xs={3}>
-                        <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
-                            Наименование инструмента
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
-                            Нормативные документы
-                        </Typography>
-                    </Grid>
-                </Grid>
                 <Stack spacing={1} style={{marginLeft: 12, marginRight: 48, marginTop: 12}}>
-                    {termsRows}
+                    <Typography variant="h5" color="text.primary" style={{whiteSpace: "pre-line"}}>
+                        Перечень инвестиционных инструментов
+                    </Typography>
+                    <Grid container>
+                        <Grid item xs={3}>
+                            <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
+                                Наименование инструмента
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
+                                Нормативные документы
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Stack spacing={1}>
+                        {termsRows}
+                    </Stack>
                 </Stack>
             </Grid>
         </Grid>

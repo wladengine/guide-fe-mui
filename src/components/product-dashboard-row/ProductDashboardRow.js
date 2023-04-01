@@ -30,15 +30,17 @@ const ProductDashboardRow = ({product, filteredFeatures}) => {
     return (
         <Grid container>
             <Grid item xs={3}>
-                <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
-                    {product.short_name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" style={{whiteSpace: "pre-line"}}>
-                    {product.name}
-                </Typography>
+                <Stack spacing={1}>
+                    <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
+                        {product.short_name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" style={{whiteSpace: "pre-line"}}>
+                        {product.name}
+                    </Typography>
+                </Stack>
             </Grid>
             <Grid xs={9}>
-                <Stack spacing={1}>
+                <Stack spacing={2}>
                     {documents}
                 </Stack>
             </Grid>
