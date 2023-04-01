@@ -17,6 +17,17 @@ function Copyright() {
   );
 }
 
+function Contacts() {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center">
+            <Link color="inherit" href="/">
+                Контакты
+            </Link>
+            {'.'}
+        </Typography>
+    );
+}
+
 function Footer(props) {
   const { description, title } = props;
 
@@ -35,6 +46,7 @@ function Footer(props) {
           {description}
         </Typography>
         <Copyright />
+          <Contacts />
       </Container>
     </Box>
   );
