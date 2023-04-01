@@ -13,6 +13,8 @@ const ProductDashboardRow = ({product, filteredFeatures}) => {
         .map(s => s.document)
         .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos)
 
+    console.log(documentsData)
+
     const documents = documentsData.map((d) => {
         return (
             <React.Fragment key={`prod${product.id}_${d.id}`}>

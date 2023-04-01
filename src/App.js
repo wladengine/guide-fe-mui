@@ -22,9 +22,9 @@ import ProductDashboard from "./pages/product-dashboard/ProductDashboard";
 
 const sections = [
     { title: 'Главная', url: '/' },
-    { title: 'Инструменты', url: '/products-dashboard' },
+    { title: 'Перечень инвест.инструментов', url: '/products-dashboard' },
     { title: 'Сравнение инвест.инструментов', url: '/dashboard' },
-    { title: 'Этапы исполнения', url: '/timelines' },
+    { title: 'Этапы реализации', url: '/timelines' },
     { title: 'Глоссарий', url: '/terms' },
     { title: 'Карта', url: '/map' },
     { title: 'ИнвестМаркет', url: '/market' },

@@ -47,7 +47,7 @@ const ProductDashboard = () => {
                 product={val}
                 filteredFeatures={
                     features
-                        .filter((item, pos, self) => self.findIndex(v => v.product.id === val.id) === pos)
+                        .filter((item) => item.product.id === val.id)
                         //.map((v) => v.parameter)
                 }
             />)
@@ -69,7 +69,7 @@ const ProductDashboard = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Grid item xs={11} className="ms-4">
-                <h3 style={{marginLeft: 12}}>Продукты</h3>
+                <h3 style={{marginLeft: 12}}>Перечень инвестиционных инструментов</h3>
                 <Grid container>
                     <Grid item xs={3}>
                         <Typography variant="body2" color="text.primary" style={{whiteSpace: "pre-line"}}>
