@@ -40,7 +40,7 @@ const ProductDashboardRow = ({product, filteredFeatures}) => {
                 </Stack>
             </Grid>
             <Grid xs={9}>
-                <Stack spacing={2}>
+                <Stack spacing={1}>
                     {documents}
                 </Stack>
             </Grid>

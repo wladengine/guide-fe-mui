@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import Typography from "@mui/material/Typography";
 import css from './dashboard.module.css'
 import ProductSegmentRow from "../../components/product-segment-row/ProductSegmentRow";
+import {Backdrop, CircularProgress} from "@mui/material";
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -89,6 +90,9 @@ const Dashboard = () => {
                 setFoundFeatures(null)
                 return
             }
+
+            backdropOpen()
+
             fetch(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`, {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 mode: 'cors',
@@ -107,6 +111,7 @@ const Dashboard = () => {
                 .catch(function (error) {
                     console.log(error)
                 })
+                .finally(() => backdropClose())
         }
     }, [filterParams, productParams])
 
@@ -250,9 +255,21 @@ const Dashboard = () => {
                     style={{cursor: "pointer"}}
                     onClick={() => updateCollapsedMenuItems('productList')}>раскрыть +</Typography>
             </>
-
+    const [backdropVisible, setBackdropVisible] = React.useState(false);
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
+    };
     return (
         <Grid container spacing={2}>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={backdropVisible}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Grid item xs={3}>
                 <b>Инструменты</b>
                 {productsFormGroup}
