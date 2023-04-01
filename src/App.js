@@ -18,9 +18,11 @@ import Admin from "./pages/admin/Admin";
 import FeatureList from "./pages/feature-list/FeatureList";
 import Feature from "./pages/feature/Feature";
 import Login from "./pages/login/Login";
+import ProductDashboard from "./pages/product-dashboard/ProductDashboard";
 
 const sections = [
     { title: 'Главная', url: '/' },
+    { title: 'Инструменты', url: '/products-dashboard' },
     { title: 'Сравнение инвест.инструментов', url: '/dashboard' },
     { title: 'Этапы исполнения', url: '/timelines' },
     { title: 'Глоссарий', url: '/terms' },
@@ -75,6 +77,7 @@ export default function App() {
                             <Route path={'/document'} element={<Document />} />
                             <Route path={'/feature-list'} element={<FeatureList />} />
                             <Route path={'/feature'} element={<Feature />} />
+                            <Route path={'/products-dashboard'} element={<ProductDashboard />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>
