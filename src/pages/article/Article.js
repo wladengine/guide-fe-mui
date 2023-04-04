@@ -18,23 +18,26 @@ import {
 import {
     CreateRounded,
 } from "@mui/icons-material";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import ru from 'date-fns/locale/ru';
-import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 
-const Document = () => {
+const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
-    const [id, setId] = React.useState(searchParams.get('id'))
-    const [articles, setArticles] = React.useState(null)
+    const id = searchParams.get('id')
+    const param_document = searchParams.get('document') ?? -1
 
+    const [number, setNumber] = React.useState('')
+    const [name, setName] = React.useState('')
+    const [documentName, setDocumentName] = React.useState('')
+    const [document, setDocument] = React.useState(param_document)
+    const [segmentIds, setSegmentIds] = React.useState(null)
+    const [segments, setSegments] = React.useState(null)
     const [authToken] = useContext(AuthContext)
+
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
-        fetch(`${baseUrl}/documents/${id}`, {
+        fetch(`${baseUrl}/articles/${id}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -44,20 +47,27 @@ const Document = () => {
             referrerPolicy: 'no-referrer',
         })
             .then((response) => {
+                if (!response.ok) {
+                    GetDocument(document)
+                    return null
+                }
                 return response.json()
             })
             .then((data) => {
-                setName(data.short_name)
-                let date = new Date(data.date)
-                setDate(date)
-                setDescription(data.full_name)
+                if (data !== null){
+                    setNumber(data.number)
+                    setName(data.name)
+                    setDocument(data.document)
+                    setSegmentIds(data.segments)
+                    GetDocument(data.document)
+                }
             })
             .catch(function (error) {
                 console.log(error)
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/documents/${id}/articles`, {
+        fetch(`${baseUrl}/articles/${id}/segments`, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -70,22 +80,47 @@ const Document = () => {
                 return response.json()
             })
             .then((data) => {
-                setArticles(data)
+                setSegments(
+                    data.sort((a, b) => {
+                        return a.number - b.number
+                    }),
+                )
             })
             .catch(function (error) {
                 console.log(error)
             })
     }, [])
+
+    const GetDocument = (documentId) => {
+        fetch(`${baseUrl}/documents/${documentId}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setDocumentName(data.short_name)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
 
     const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
-    const saveDocument = () => {
-        console.log(authToken)
+    const saveArticle = () => {
         const reqBody = {
-            short_name: name,
-            date: new Date(date).toJSON(),
-            full_name: description,
+            document: parseInt(document),
+            number: number,
+            name: name,
+            segments: segmentIds,
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -95,22 +130,20 @@ const Document = () => {
             body: reqJSON,
             redirect: 'follow',
         }
-        const fetchUrl = isPOST ? `${baseUrl}/documents` : `${baseUrl}/documents/${id}`
+        const fetchUrl = isPOST ? `${baseUrl}/articles` : `${baseUrl}/articles/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     if (response.status == '401') {
                         setIsMessageUnauthorized(true)
                     }
-                    console.log(response)
-                    console.log(response.status)
+                    alert('Error while save article')
                     return null
                 }
                 return response.json()
             })
             .then((data) => {
                 console.log(data)
-                setId(data.id)
                 setIsSuccessfullySaved(true)
                 setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
             })
@@ -118,33 +151,29 @@ const Document = () => {
                 console.log(error)
             })
     }
-
-    const [name, setName] = React.useState('')
-    const [date, setDate] = React.useState(new Date())
-    const [description, setDescription] = React.useState('')
-    const articleTemplate = {
+    const segmentTemplate = {
         id: -1,
         number: "",
         name: ""
     }
-    const rowsArticles =
-        articles == null ?
-            [articleTemplate] :
-            articles
+    const rowsSegments =
+        segments == null ?
+            [segmentTemplate] :
+            segments
                 .sort()
-                .map((val) => Object.create(articleTemplate, {
+                .map((val) => Object.create(segmentTemplate, {
                     id: { value: val.id },
                     number: { value: val.number },
-                    name: { value: val.name },
+                    name: { value: val.text },
                 }))
-    const columnsArticles = [
+    const columnsSegments = [
         { field: 'number', headerName: '#', width: 50 },
         { field: 'name', headerName: 'Статья', flex: 1 }
     ];
-    const onCreateNewRecordHandler = () => { window.location.href = `./article?document=${id}`}
+    const onCreateNewRecordHandler = () => {}
     const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = (article_id) => { window.location.href = `./article?id=${article_id}` }
-
+    const onEditRecordHandler = () => {}
+    const documentUrl = `./document?id=${document}`
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
@@ -156,18 +185,41 @@ const Document = () => {
                         <Link underline="hover" color="inherit" href="/document-list">
                             Документы
                         </Link>
+                        <Link underline="hover" color="inherit" href={documentUrl}>
+                            {documentName}
+                        </Link>
                         <Typography key="3" color="text.primary">
-                            {name}
+                            ст. {number}
                         </Typography>
                     </Breadcrumbs>
                     <h2>Документ</h2>
                     <Grid item lg={12} md={12} sm={12}>
                         <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="document_name">
-                                Название документа
+                            <InputLabel htmlFor="article_number">
+                                Номер статьи
                             </InputLabel>
                             <Input
-                                id="document_name"
+                                id="article_number"
+                                value={number}
+                                onChange={(e) => {
+                                    setNumber(e.target.value)
+                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CreateRounded />
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12}>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="article_text">
+                                Текст статьи
+                            </InputLabel>
+                            <Input
+                                id="article_text"
+                                multiline
                                 value={name}
                                 onChange={(e) => {
                                     setName(e.target.value)
@@ -181,32 +233,7 @@ const Document = () => {
                         </FormControl>
                     </Grid>
                     <Grid item lg={12} md={12} sm={12}>
-                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                            <DatePickerRu value={date} setValueHandler={setDate} labelText={"Дата документа"} />
-                        </LocalizationProvider>
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12}>
-                        <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="document_description">
-                                Описание документа
-                            </InputLabel>
-                            <Input
-                                id="document_description"
-                                multiline
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value)
-                                }}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <CreateRounded />
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12}>
-                        <Button onClick={saveDocument}>
+                        <Button onClick={saveArticle}>
                             Сохранить
                         </Button>
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
@@ -215,19 +242,19 @@ const Document = () => {
                     <Grid item lg={12} md={12} sm={12}>
                         <h4>Статьи</h4>
                         <CrudDataGrid
-                            columns={columnsArticles}
-                            rows={rowsArticles}
+                            columns={columnsSegments}
+                            rows={rowsSegments}
                             onCreateNewRecordHandler={onCreateNewRecordHandler}
                             onDeleteRecordHandler={onDeleteRecordHandler}
                             onEditRecordHandler={onEditRecordHandler}
                         />
                         {authToken && <Button
-                                color="primary"
-                                className="px-4"
-                                href={`../#/article?document=${id}`}
-                            >
-                                Добавить
-                            </Button>}
+                            color="primary"
+                            className="px-4"
+                            href={`../#/article?document=${id}`}
+                        >
+                            Добавить
+                        </Button>}
                     </Grid>
                 </Stack>
             </Grid>
@@ -235,4 +262,4 @@ const Document = () => {
     )
 }
 
-export default Document
+export default Article

@@ -19,6 +19,7 @@ import FeatureList from "./pages/feature-list/FeatureList";
 import Feature from "./pages/feature/Feature";
 import Login from "./pages/login/Login";
 import ProductDashboard from "./pages/product-dashboard/ProductDashboard";
+import Article from "./pages/article/Article";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -78,6 +79,7 @@ export default function App() {
                             <Route path={'/feature-list'} element={<FeatureList />} />
                             <Route path={'/feature'} element={<Feature />} />
                             <Route path={'/products-dashboard'} element={<ProductDashboard />} />
+                            <Route path={'/article'} element={<Article />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>
