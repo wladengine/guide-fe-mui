@@ -13,7 +13,7 @@ import {
     InputAdornment,
     Breadcrumbs,
     Link,
-    Typography
+    Typography, CircularProgress, Backdrop
 } from "@mui/material";
 import {
     CreateRounded,
@@ -51,6 +51,11 @@ const Segment = () => {
             referrerPolicy: 'no-referrer',
         })
             .then((response) => {
+                if (!response.ok) {
+                    GetArticle(article)
+                    GetDocument(document)
+                    return null
+                }
                 return response.json()
             })
             .then((data) => {
@@ -58,7 +63,7 @@ const Segment = () => {
                 setText(data.text)
                 setArticle(data.article.id)
                 setDocument(data.document.id)
-                setArticleNumber(data.number)
+                setArticleNumber(data.article.number)
                 setDocumentName(data.document.short_name)
             })
             .catch(function (error) {
@@ -106,6 +111,49 @@ const Segment = () => {
             })
     }, [])
 
+    const GetDocument = (documentId) => {
+        fetch(`${baseUrl}/documents/${documentId}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setDocumentName(data.short_name)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+    const GetArticle = (articleId) => {
+        fetch(`${baseUrl}/articles/${articleId}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setDocument(data.document)
+                setArticleNumber(data.number)
+                GetDocument(data.document)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+
     const featureTemplate = {
         id: -1,
         product: "",
@@ -143,6 +191,7 @@ const Segment = () => {
             body: reqJSON,
             redirect: 'follow',
         }
+        backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/segments` : `${baseUrl}/segments/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
@@ -162,6 +211,7 @@ const Segment = () => {
             .catch(function (error) {
                 console.log(error)
             })
+            .finally(() => { backdropClose() })
     }
 
     const onCreateNewRecordHandler = () => {}
@@ -265,10 +315,24 @@ const Segment = () => {
     const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
+    const [backdropVisible, setBackdropVisible] = React.useState(false);
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
+    };
+
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
                 <Stack spacing={1}>
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={backdropVisible}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
                         <Link underline="hover" color="inherit" href="/admin">
                             Управление данными

@@ -87,6 +87,8 @@ export default function CrudDataGrid({ columns, rows, useActionsColumn = true, o
                     sx={{
                         [`& .${gridClasses.cell}`]: {
                             py: 1,
+                            whiteSpace: "pre-line",
+                            //textAlign: "justify"
                         },
                     }}
                     rows={rows}

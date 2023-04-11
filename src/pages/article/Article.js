@@ -13,13 +13,14 @@ import {
     InputAdornment,
     Breadcrumbs,
     Link,
-    Typography
+    Typography, CircularProgress, Backdrop
 } from "@mui/material";
 import {
     CreateRounded,
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 
 const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -32,6 +33,7 @@ const Article = () => {
     const [document, setDocument] = React.useState(param_document)
     const [segmentIds, setSegmentIds] = React.useState(null)
     const [segments, setSegments] = React.useState(null)
+    const [segmentIdToDelete, setSegmentIdToDelete] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
@@ -66,7 +68,8 @@ const Article = () => {
                 console.log(error)
             })
     }, [])
-    useEffect(() => {
+    useEffect(() => { getSegments() }, [])
+    const getSegments = () => {
         fetch(`${baseUrl}/articles/${id}/segments`, {
             method: 'GET',
             mode: 'cors',
@@ -89,7 +92,7 @@ const Article = () => {
             .catch(function (error) {
                 console.log(error)
             })
-    }, [])
+    }
 
     const GetDocument = (documentId) => {
         fetch(`${baseUrl}/documents/${documentId}`, {
@@ -130,6 +133,7 @@ const Article = () => {
             body: reqJSON,
             redirect: 'follow',
         }
+        backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/articles` : `${baseUrl}/articles/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
@@ -150,6 +154,7 @@ const Article = () => {
             .catch(function (error) {
                 console.log(error)
             })
+            .finally(() => { backdropClose() })
     }
     const segmentTemplate = {
         id: -1,
@@ -172,14 +177,78 @@ const Article = () => {
     ];
 
     const onCreateNewRecordHandler = () => { window.location.href = `./segment?article=${id}`}
-    const onDeleteRecordHandler = () => {}
+    const onDeleteRecordHandler = (segment_id) => { showDeleteDialog(segment_id) }
     const onEditRecordHandler = (segment_id) => { window.location.href = `./segment?id=${segment_id}` }
 
     const documentUrl = `./document?id=${document}`
+
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
+    const deleteSegment = () => {
+        closeDeleteDialog();
+        backdropOpen();
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/javascript', token: authToken },
+            redirect: 'follow',
+        }
+        fetch(`${baseUrl}/segments/${segmentIdToDelete}`, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    if (response.status == '401') {
+                        setIsMessageUnauthorized(true)
+                    }
+                    return false
+                }
+                return true
+            })
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setIsSuccessfullySaved(true)
+                    // afterDelete()
+                    setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+            .finally(() => {
+                backdropClose()
+                getSegments()
+            })
+    }
+    const showDeleteDialog = (segmentId) => {
+        setSegmentIdToDelete(segmentId)
+        setDeleteDialogVisible(true);
+    }
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
+
+    const [backdropVisible, setBackdropVisible] = React.useState(false);
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
+    };
+
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
                 <Stack spacing={1}>
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={backdropVisible}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    <DialogActionConfirmation
+                        onOk={deleteSegment}
+                        onCancel={closeDeleteDialog}
+                        open={deleteDialogVisible}
+                    >
+                        Удалить выбранный абзац? Данное действие будет невозможно отменить.
+                    </DialogActionConfirmation>
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
                         <Link underline="hover" color="inherit" href="/admin">
                             Управление данными
