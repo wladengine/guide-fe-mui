@@ -20,6 +20,7 @@ import Feature from "./pages/feature/Feature";
 import Login from "./pages/login/Login";
 import ProductDashboard from "./pages/product-dashboard/ProductDashboard";
 import Article from "./pages/article/Article";
+import Segment from "./pages/segment/Segment";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -80,6 +81,7 @@ export default function App() {
                             <Route path={'/feature'} element={<Feature />} />
                             <Route path={'/products-dashboard'} element={<ProductDashboard />} />
                             <Route path={'/article'} element={<Article />} />
+                            <Route path={'/segment'} element={<Segment />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>

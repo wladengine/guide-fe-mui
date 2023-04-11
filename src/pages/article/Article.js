@@ -137,7 +137,7 @@ const Article = () => {
                     if (response.status == '401') {
                         setIsMessageUnauthorized(true)
                     }
-                    alert('Error while save article')
+                    //alert('Error while save article')
                     return null
                 }
                 return response.json()
@@ -170,9 +170,11 @@ const Article = () => {
         { field: 'number', headerName: '#', width: 50 },
         { field: 'name', headerName: 'Статья', flex: 1 }
     ];
-    const onCreateNewRecordHandler = () => {}
+
+    const onCreateNewRecordHandler = () => { window.location.href = `./segment?article=${id}`}
     const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = () => {}
+    const onEditRecordHandler = (segment_id) => { window.location.href = `./segment?id=${segment_id}` }
+
     const documentUrl = `./document?id=${document}`
     return (
         <Grid container spacing={2}>
