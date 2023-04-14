@@ -34,6 +34,12 @@ import FeeList from "./pages/fee-list/FeeList";
 import Claim from "./pages/claim/Claim";
 import TermList from "./pages/term-list/TermList";
 import Term from "./pages/term/Term";
+import RegionList from "./pages/region-list/RegionList";
+import Region from "./pages/region/Region";
+import FoundationList from "./pages/foundation-list/FoundationList";
+import Foundation from "./pages/foundation/Foundation";
+import ObjectList from "./pages/object-list/ObjectList";
+import Object from "./pages/object/Object";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -108,6 +114,12 @@ export default function App() {
                             <Route path={'/claim'} element={<Claim />} />
                             <Route path={'/term-list'} element={<TermList />} />
                             <Route path={'/term'} element={<Term />} />
+                            <Route path={'/region-list'} element={<RegionList />} />
+                            <Route path={'/region'} element={<Region />} />
+                            <Route path={'/foundation-list'} element={<FoundationList />} />
+                            <Route path={'/foundation'} element={<Foundation />} />
+                            <Route path={'/object-list'} element={<ObjectList />} />
+                            <Route path={'/object'} element={<Object />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>

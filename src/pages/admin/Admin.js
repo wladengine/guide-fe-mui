@@ -25,6 +25,9 @@ export default function Admin() {
                     <Button href={'./claim-list'}>Данные для маркета</Button>
                     <Divider />
                     <Typography variant="body2" color="text.secondary">Карта</Typography>
+                    <Button href={'./region-list'}>Регионы</Button>
+                    <Button href={'./foundation-list'}>Виды экономических зон</Button>
+                    <Button href={'./object-list'}>Объекты карты</Button>
                     <Divider />
                 </Stack>
             </Grid>
