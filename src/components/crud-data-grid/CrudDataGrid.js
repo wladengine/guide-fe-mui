@@ -27,7 +27,16 @@ EditToolbar.propTypes = {
     handleClick: PropTypes.func.isRequired,
 };
 
-export default function CrudDataGrid({ columns, rows, useActionsColumn = true, onCreateNewRecordHandler, onEditRecordHandler, onDeleteRecordHandler }) {
+export default function CrudDataGrid(
+    {
+        columns,
+        rows,
+        useActionsColumn = true,
+        onCreateNewRecordHandler,
+        onEditRecordHandler,
+        onDeleteRecordHandler,
+        showNewRecordButton = true
+    }) {
     const [rowModesModel, setRowModesModel] = React.useState({});
 
     const handleEditClick = (id) => () => {
@@ -96,7 +105,7 @@ export default function CrudDataGrid({ columns, rows, useActionsColumn = true, o
                     editMode="row"
                     rowModesModel={rowModesModel}
                     slots={{
-                        toolbar: EditToolbar
+                        toolbar: showNewRecordButton && EditToolbar
                     }}
                     slotProps={{
                         toolbar: { handleClick: onCreateNewRecordHandler },

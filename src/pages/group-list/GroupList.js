@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
 import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
 
-const FeatureList = () => {
+const GroupList = () => {
+    const [groups, setGroups] = React.useState(null)
+
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
-    const [features, setFeatures] = React.useState(null)
     useEffect(() => {
         backdropOpen()
-        fetch(`${baseUrl}/features`, {
+        fetch(`${baseUrl}/groups`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors',
             headers: {
@@ -21,7 +22,7 @@ const FeatureList = () => {
                 return response.json()
             })
             .then((data) => {
-                setFeatures(data)
+                setGroups(data)
             })
             .catch(function (error) {
                 console.log(error)
@@ -30,27 +31,24 @@ const FeatureList = () => {
     }, [])
 
     const columns = [
-        { field: 'product', headerName: 'Продукт', width: 100 },
-        { field: 'parameter', headerName: 'Параметр', flex: 1 },
-        { field: 'segments', headerName: '#', width: 50 }
+        { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'count', headerName: 'Число параметров', width: 150 }
     ];
     const templateRow = {
         id: -1,
-        product: "",
-        parameter: "",
-        segments: 0
+        name: "",
+        count: 0,
     }
-    const rows = features == null ? [templateRow] :
-        features.map((val) => Object.create(templateRow, {
+    const rows = groups == null ? [templateRow] :
+        groups.map((val) => Object.create(templateRow, {
             id: { value: val.id },
-            product: { value: val.product.short_name },
-            parameter: { value: val.parameter.name },
-            segments: { value: val.segments?.length ?? 0 }
+            name: { value: val.name },
+            count: { value: val.parameters?.length ?? 0 },
         }))
 
-    const onCreateNewRecordHandler = () => { window.location.href = `./feature?id=-1` }
+    const onCreateNewRecordHandler = () => { window.location.href = `./group?id=-1` }
     const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = (id) => { window.location.href = `./feature?id=${id}` }
+    const onEditRecordHandler = (id) => { window.location.href = `./group?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -73,20 +71,21 @@ const FeatureList = () => {
                     Управление данными
                 </Link>
                 <Typography key="3" color="text.primary">
-                    Характеристики
+                    Группы характеристик
                 </Typography>
             </Breadcrumbs>
-            <Typography variant="h5" color="text.primary">Характеристики</Typography>
+            <Typography variant="h5" color="text.primary">Группы характеристик</Typography>
             <CrudDataGrid
                 columns={columns}
                 rows={rows}
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
+                showNewRecordButton={false}
             />
         </Stack>
 
     )
 }
 
-export default FeatureList
+export default GroupList

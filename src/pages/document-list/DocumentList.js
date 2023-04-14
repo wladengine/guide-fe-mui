@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import {Breadcrumbs, Link, Stack, Typography} from "@mui/material";
+import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
 
 const DocumentList = () => {
     const [documents, setDocuments] = React.useState(null)
@@ -8,6 +8,7 @@ const DocumentList = () => {
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
+        backdropOpen()
         fetch(`${baseUrl}/documents`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors',
@@ -26,6 +27,7 @@ const DocumentList = () => {
             .catch(function (error) {
                 console.log(error)
             })
+            .finally(() => { backdropClose() })
     }, [])
 
     const columns = [
@@ -56,8 +58,22 @@ const DocumentList = () => {
     const onDeleteRecordHandler = () => {}
     const onEditRecordHandler = (id) => { window.location.href = `./document?id=${id}` }
 
+    const [backdropVisible, setBackdropVisible] = React.useState(false);
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
+    };
+
     return (
-        <Stack>
+        <Stack spacing={2}>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={backdropVisible}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" href="/admin">
                     Управление данными
@@ -66,7 +82,7 @@ const DocumentList = () => {
                     Документы
                 </Typography>
             </Breadcrumbs>
-            <h2>Документы</h2>
+            <Typography variant="h5" color="text.primary">Документы</Typography>
             <CrudDataGrid
                 columns={columns}
                 rows={rows}

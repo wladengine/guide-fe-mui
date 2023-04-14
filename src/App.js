@@ -21,6 +21,12 @@ import Login from "./pages/login/Login";
 import ProductDashboard from "./pages/product-dashboard/ProductDashboard";
 import Article from "./pages/article/Article";
 import Segment from "./pages/segment/Segment";
+import ProductList from "./pages/product-list/ProductList";
+import ParameterList from "./pages/parameter-list/ParameterList";
+import GroupList from "./pages/group-list/GroupList";
+import Product from "./pages/product/Product";
+import Parameter from "./pages/parameter/Parameter";
+import Group from "./pages/group/Group";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -82,6 +88,12 @@ export default function App() {
                             <Route path={'/products-dashboard'} element={<ProductDashboard />} />
                             <Route path={'/article'} element={<Article />} />
                             <Route path={'/segment'} element={<Segment />} />
+                            <Route path={'/product-list'} element={<ProductList />} />
+                            <Route path={'/product'} element={<Product />} />
+                            <Route path={'/parameter-list'} element={<ParameterList />} />
+                            <Route path={'/parameter'} element={<Parameter />} />
+                            <Route path={'/group-list'} element={<GroupList />} />
+                            <Route path={'/group'} element={<Group />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>
