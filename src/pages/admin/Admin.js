@@ -17,6 +17,14 @@ export default function Admin() {
                     <Button href={'./group-list'}>Группы параметров</Button>
                     <Button href={'./feature-list'}>Характеристики</Button>
                     <Divider />
+                    <Typography variant="body2" color="text.secondary">ИнвестМаркет</Typography>
+                    <Button href={'./realm-list'}>Сферы для инвестирования</Button>
+                    <Button href={'./actor-list'}>Инвесторы</Button>
+                    <Button href={'./fee-list'}>Суммы</Button>
+                    <Button href={'./claim-list'}>Данные для маркета</Button>
+                    <Divider />
+                    <Typography variant="body2" color="text.secondary">Карта</Typography>
+                    <Divider />
                 </Stack>
             </Grid>
         </Grid>

@@ -27,6 +27,11 @@ import GroupList from "./pages/group-list/GroupList";
 import Product from "./pages/product/Product";
 import Parameter from "./pages/parameter/Parameter";
 import Group from "./pages/group/Group";
+import RealmList from "./pages/realm-list/RealmList";
+import ActorList from "./pages/actor-list/ActorList";
+import ClaimList from "./pages/claim-list/ClaimList";
+import FeeList from "./pages/fee-list/FeeList";
+import Claim from "./pages/claim/Claim";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -94,6 +99,11 @@ export default function App() {
                             <Route path={'/parameter'} element={<Parameter />} />
                             <Route path={'/group-list'} element={<GroupList />} />
                             <Route path={'/group'} element={<Group />} />
+                            <Route path={'/realm-list'} element={<RealmList />} />
+                            <Route path={'/actor-list'} element={<ActorList />} />
+                            <Route path={'/fee-list'} element={<FeeList />} />
+                            <Route path={'/claim-list'} element={<ClaimList />} />
+                            <Route path={'/claim'} element={<Claim />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>
