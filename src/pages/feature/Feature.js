@@ -497,6 +497,8 @@ const Feature = () => {
         setSavedSegmentsIds(savedSegmentsIds.filter(item => item !== id))
     }
 
+    const moveToSegment = (segment_id) => { window.location.href = `./segment?id=${segment_id}` }
+
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
         setBackdropVisible(false);
@@ -596,6 +598,7 @@ const Feature = () => {
                     rows={rowsSegments}
                     onCreateNewRecordHandler={showAddSegmentDialog}
                     onDeleteRecordHandler={deleteSegment}
+                    onEditRecordHandler={moveToSegment}
                 />
                 <AddSegmentDialog
                     id="add-segment"

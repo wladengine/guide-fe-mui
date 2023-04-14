@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useContext } from 'react'
 import AuthContext from "../../components/auth-context/AuthContext";
@@ -13,13 +13,123 @@ import {
     InputAdornment,
     Breadcrumbs,
     Link,
-    Typography, CircularProgress, Backdrop
+    Typography,
+    CircularProgress,
+    Backdrop,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from "@mui/material";
 import {
     CreateRounded,
 } from "@mui/icons-material";
+import MuiAlert from '@mui/material/Alert';
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
+import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
+import PropTypes from "prop-types";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
+
+const baseUrl = 'http://487346.msk-kvm.ru:3333'
+
+function AddFeatureDialog(props) {
+    const { onClose, value: valueProp, open, ...other } = props;
+    const [value, setValue] = React.useState(valueProp);
+
+    React.useEffect(() => {
+        if (!open) {
+            setValue(valueProp);
+        }
+    }, [valueProp, open]);
+
+    const [feature, setFeature] = React.useState('')
+    const [features, setFeatures] = React.useState(null)
+
+    useEffect(() => {
+        fetch(`${baseUrl}/features`, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setFeatures(data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [])
+
+    const optionsFeatures =
+        features === null ?
+            [] :
+            features
+                .map((val) => ({id: val.id, label: `[${val.product.short_name}] ${val.parameter.name}` }))
+                .sort((a, b) => {
+                    const nameA = a.label.toUpperCase()
+                    const nameB = b.label.toUpperCase()
+                    if (nameA < nameB) {
+                        return -1
+                    }
+                    if (nameA > nameB) {
+                        return 1
+                    }
+                    return 0
+                })
+
+    const handleCancel = () => {
+        onClose();
+    };
+    const handleOk = () => {
+        const featureId = parseInt(feature)
+        const featExtended = features.find((x) => x.id == featureId)
+
+        onClose(featureId, featExtended);
+    };
+
+    return (
+        <Dialog
+            sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+            maxWidth="xs"
+            open={open}
+            {...other}
+        >
+            <DialogTitle>Выберите характеристику</DialogTitle>
+            <DialogContent dividers>
+                <Stack spacing={2}>
+                    <AutocompleteCombobox
+                        id={'segment'}
+                        label={'Пункт'}
+                        onValueChanged={(newVal) => {
+                            setFeature(newVal.id)
+                        }}
+                        options={optionsFeatures}
+                    />
+                </Stack>
+            </DialogContent>
+            <DialogActions>
+                <Button autoFocus onClick={handleCancel}>
+                    Отмена
+                </Button>
+                <Button onClick={handleOk}>Ok</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+AddFeatureDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    value: PropTypes.string.isRequired,
+};
 
 const Segment = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -33,12 +143,9 @@ const Segment = () => {
     const [articleNumber, setArticleNumber] = React.useState('')
     const [featuresData, setFeaturesData] = React.useState(null)
     const [features, setFeatures] = React.useState(null)
-    const [currentFeature, setCurrentFeature] = React.useState(null)
-    const [featureAddingVisible, setFeatureAddingVisible] = React.useState(true)
+    const [addFeatureDialogVisible, setAddFeatureDialogVisible] = React.useState(false);
     const [article, setArticle] = React.useState(param_article)
     const [authToken] = useContext(AuthContext)
-
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         fetch(`${baseUrl}/segments/${id}`, {
@@ -70,7 +177,8 @@ const Segment = () => {
                 console.log(error)
             })
     }, [])
-    useEffect(() => {
+    useEffect(() => { GetFeatures() }, [])
+    const GetFeatures = () => {
         fetch(`${baseUrl}/segments/${id}/features`, {
             method: 'GET',
             mode: 'cors',
@@ -85,31 +193,12 @@ const Segment = () => {
             })
             .then((data) => {
                 setFeaturesData(data)
+                setFeatures(data.map(val => val.id))
             })
             .catch(function (error) {
                 console.log(error)
             })
-    }, [])
-    useEffect(() => {
-        fetch('http://487346.msk-kvm.ru:3333/features', {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                setFeatures(data)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    }, [])
+    }
 
     const GetDocument = (documentId) => {
         fetch(`${baseUrl}/documents/${documentId}`, {
@@ -206,7 +295,6 @@ const Segment = () => {
                 console.log(data)
                 setIsSuccessfullySaved(true)
                 setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
-                //window.location = `./#/article?id=${article}`
             })
             .catch(function (error) {
                 console.log(error)
@@ -214,36 +302,36 @@ const Segment = () => {
             .finally(() => { backdropClose() })
     }
 
-    const onCreateNewRecordHandler = () => {}
+    const onCreateNewRecordHandler = () => { setAddFeatureDialogVisible(true) }
     const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = () => {}
+    const onEditRecordHandler = (feature_id) => { window.location.href = `./feature?id=${feature_id}` }
 
-    const optionsFeatures =
-        features == null ? (
-            <></>
-        ) : (
-            features.map((val, index) => {
-                return (
-                    <option key={index} value={val.id}>
-                        {`[${val.product.short_name}] ${val.parameter.name}`}
-                    </option>
-                )
-            })
-        )
-
-    const addFeature = () => {
-        setFeatureAddingVisible(!featureAddingVisible)
+    const handleClose = () => {
+        setAddFeatureDialogVisible(false);
+    };
+    const onSaveFeature = (featureId, featureExtended) => {
+        console.log('in onSaveFeature()')
+        console.log(`onSaveFeature - featureId=${featureId} featureExtended=${featureExtended}`)
+        if (featureId === undefined || featureExtended === undefined){
+            handleClose()
+            return
+        }
+        console.log([...featuresData, featureExtended], 'savedSegmentsIds')
+        if (!features.includes(featureId)) {
+            console.log('saving....')
+            saveFeature(featureId);
+            handleClose()
+        }
     }
-
-    const saveFeature = () => {
-        if (currentFeature != null && currentFeature >= 0) {
-            console.log(currentFeature, 'current feature')
+    const saveFeature = (feature_id) => {
+        if (feature_id != null && feature_id >= 0) {
+            console.log(feature_id, 'current feature')
             console.log(features, 'features')
             if (features != null) {
-                const fff = features.find((x) => x.id == currentFeature)
+                const fff = features.find((x) => x.id === feature_id)
                 console.log(fff, 'fff')
             }
-            fetch(`${baseUrl}/features/${currentFeature}`, {
+            fetch(`${baseUrl}/features/${feature_id}`, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -263,15 +351,14 @@ const Segment = () => {
                     let saveFeature = false
                     console.log(segments, 'segments')
                     if (typeof segments === 'undefined' || segments === null) {
-                        console.log('Saving...')
                         saveFeature = true
-                    } else if (segments.find((x) => x == id) == null) {
-                        const ff = segments.find((x) => x == id)
-                        console.log(ff, 'ff')
-                        console.log('Saving...')
+                    } else if (segments.find((x) => x === id) == null) {
+                        const ff = segments.find((x) => x === id)
+                        console.log(ff, 'found segments')
                         saveFeature = true
                     }
                     if (saveFeature) {
+                        console.log('Saving...')
                         const reqBody = {
                             product_id: parseInt(product),
                             parameter_id: parseInt(parameter),
@@ -290,14 +377,17 @@ const Segment = () => {
                         fetch(fetchUrl, requestOptions)
                             .then((response) => {
                                 if (!response.ok) {
-                                    alert('Error while save article')
+                                    setSnackbarNotAuthorizedErrorOpen(true)
                                     return null
                                 }
                                 return response.json()
                             })
                             .then((data) => {
-                                console.log(data)
-                                window.location = `./#/feature-list`
+                                if (data !== null){
+                                    console.log(data)
+                                    setSnackbarSuccessOpen(true)
+                                    GetFeatures()
+                                }
                             })
                             .catch(function (error) {
                                 console.log(error)
@@ -307,6 +397,9 @@ const Segment = () => {
                 .catch(function (error) {
                     console.log(error)
                 })
+        }
+        else {
+            setSnackbarErrorOpen(true)
         }
     }
     const documentUrl = `./document?id=${document}`
@@ -322,6 +415,10 @@ const Segment = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
+    const [snackbarNotAuthorizedErrorOpen, setSnackbarNotAuthorizedErrorOpen] = React.useState(false)
 
     return (
         <Grid container spacing={2}>
@@ -406,13 +503,25 @@ const Segment = () => {
                             onDeleteRecordHandler={onDeleteRecordHandler}
                             onEditRecordHandler={onEditRecordHandler}
                         />
-                        {authToken && <Button
-                            color="primary"
-                            className="px-4"
-                            href={`../#/article?document=${id}`}
-                        >
-                            Добавить
-                        </Button>}
+                        <AddFeatureDialog
+                            id="add-segment"
+                            keepMounted
+                            open={addFeatureDialogVisible}
+                            value={''}
+                            onClose={onSaveFeature}
+                        />
+                        <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                            Характеристика успешно добавлена
+                        </SnackbarSuccess>
+                        <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                            Ошибка при добавлении характеристики
+                        </SnackbarError>
+                        <SnackbarError open={snackbarNotAuthorizedErrorOpen} onClose={() => { setSnackbarNotAuthorizedErrorOpen(false)}}>
+                            Ошибка: пользователь не авторизован <br />
+                            <Button href={'./login'} color="inherit" size="small">
+                                Войти
+                            </Button>
+                        </SnackbarError>
                     </Grid>
                 </Stack>
             </Grid>
