@@ -6,8 +6,8 @@ import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
 
-const ClaimList = () => {
-    const [claims, setClaims] = React.useState(null)
+const TermList = () => {
+    const [terms, setTerms] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
@@ -15,7 +15,7 @@ const ClaimList = () => {
     useEffect(() => { getClaims() }, [])
     const getClaims = () => {
         backdropOpen()
-        fetch(`${baseUrl}/claims`, {
+        fetch(`${baseUrl}/terms`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors',
             headers: {
@@ -28,7 +28,7 @@ const ClaimList = () => {
                 return response.json()
             })
             .then((data) => {
-                setClaims(data)
+                setTerms(data)
             })
             .catch(function (error) {
                 console.log(error)
@@ -37,30 +37,27 @@ const ClaimList = () => {
     }
 
     const columns = [
-        { field: 'product', headerName: 'Инструмент', width: 100 },
-        { field: 'realm', headerName: 'Сфера инвестирования', flex: 2 },
-        { field: 'fee', headerName: 'Сумма', flex: 1 },
-        { field: 'clause', headerName: 'Примечание', flex: 1 }
+        { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'definition', headerName: 'Описание', flex: 2 },
+        { field: 'document', headerName: 'ФЗ', width: 100 },
     ];
     const templateRow = {
         id: -1,
-        product: "",
-        realm: "",
-        fee: "",
-        clause: "",
+        name: "",
+        definition: "",
+        document: "",
     }
-    const rows = claims == null ? [templateRow] :
-        claims.map((val) => Object.create(templateRow, {
+    const rows = terms == null ? [templateRow] :
+        terms.map((val) => Object.create(templateRow, {
             id: { value: val.id },
-            product: { value: val.product.short_name },
-            realm: { value: val.realm.description },
-            fee: { value: val.fee.name },
-            clause: { value: val.clause },
+            name: { value: val.name },
+            definition: { value: val.definition },
+            document: { value: val.document.short_name },
         }))
 
-    const onCreateNewRecordHandler = () => { window.location.href = `./claim?id=-1` }
+    const onCreateNewRecordHandler = () => { window.location.href = `./term?id=-1` }
     const onDeleteRecordHandler = (id) => { showDeleteDialog(id) }
-    const onEditRecordHandler = (id) => { window.location.href = `./claim?id=${id}` }
+    const onEditRecordHandler = (id) => { window.location.href = `./term?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -72,9 +69,9 @@ const ClaimList = () => {
 
     const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
     const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
-    const [claimIdToDelete, setClaimIdToDelete] = React.useState(null)
+    const [termIdToDelete, setTermIdToDelete] = React.useState(null)
     const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
-    const deleteSegment = () => {
+    const deleteTerm = () => {
         closeDeleteDialog();
         const requestOptions = {
             method: 'DELETE',
@@ -82,7 +79,7 @@ const ClaimList = () => {
             redirect: 'follow',
         }
         backdropOpen();
-        fetch(`${baseUrl}/claims/${claimIdToDelete}`, requestOptions)
+        fetch(`${baseUrl}/terms/${termIdToDelete}`, requestOptions)
             .then((response) => {
                 backdropClose()
                 if (!response.ok) {
@@ -103,8 +100,8 @@ const ClaimList = () => {
                 console.log(error)
             })
     }
-    const showDeleteDialog = (claimId) => {
-        setClaimIdToDelete(claimId)
+    const showDeleteDialog = (object_id) => {
+        setTermIdToDelete(object_id)
         setDeleteDialogVisible(true);
     }
     const closeDeleteDialog = () => {
@@ -124,10 +121,10 @@ const ClaimList = () => {
                     Управление данными
                 </Link>
                 <Typography key="3" color="text.primary">
-                    Данные для маркета
+                    Глоссарий
                 </Typography>
             </Breadcrumbs>
-            <Typography variant="h5" color="text.primary">Данные для маркета</Typography>
+            <Typography variant="h5" color="text.primary">Глоссарий</Typography>
             <CrudDataGrid
                 columns={columns}
                 rows={rows}
@@ -136,7 +133,7 @@ const ClaimList = () => {
                 onEditRecordHandler={onEditRecordHandler}
             />
             <DialogActionConfirmation
-                onOk={deleteSegment}
+                onOk={deleteTerm}
                 onCancel={closeDeleteDialog}
                 open={deleteDialogVisible}
             >
@@ -155,4 +152,4 @@ const ClaimList = () => {
     )
 }
 
-export default ClaimList
+export default TermList

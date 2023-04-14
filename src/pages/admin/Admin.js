@@ -10,6 +10,7 @@ export default function Admin() {
                     <Typography variant="h5" color="text.primary">Управление данными</Typography>
                     <Typography variant="body2" color="text.secondary">Документы</Typography>
                     <Button href={'./document-list'}>Документы</Button>
+                    <Button href={'./term-list'}>Глоссарий</Button>
                     <Divider />
                     <Typography variant="body2" color="text.secondary">Характеристики</Typography>
                     <Button href={'./product-list'}>Инструменты</Button>

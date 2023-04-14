@@ -32,6 +32,8 @@ import ActorList from "./pages/actor-list/ActorList";
 import ClaimList from "./pages/claim-list/ClaimList";
 import FeeList from "./pages/fee-list/FeeList";
 import Claim from "./pages/claim/Claim";
+import TermList from "./pages/term-list/TermList";
+import Term from "./pages/term/Term";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -104,6 +106,8 @@ export default function App() {
                             <Route path={'/fee-list'} element={<FeeList />} />
                             <Route path={'/claim-list'} element={<ClaimList />} />
                             <Route path={'/claim'} element={<Claim />} />
+                            <Route path={'/term-list'} element={<TermList />} />
+                            <Route path={'/term'} element={<Term />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>
