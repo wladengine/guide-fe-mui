@@ -40,6 +40,7 @@ import FoundationList from "./pages/foundation-list/FoundationList";
 import Foundation from "./pages/foundation/Foundation";
 import ObjectList from "./pages/object-list/ObjectList";
 import Object from "./pages/object/Object";
+import Stage from "./pages/stage/Stage";
 
 const sections = [
     { title: 'Главная', url: '/' },
@@ -120,6 +121,7 @@ export default function App() {
                             <Route path={'/foundation'} element={<Foundation />} />
                             <Route path={'/object-list'} element={<ObjectList />} />
                             <Route path={'/object'} element={<Object />} />
+                            <Route path={'/stage'} element={<Stage />} />
                         </Routes>
                     </BrowserRouter>
                 </Container>

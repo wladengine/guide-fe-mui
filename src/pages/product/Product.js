@@ -12,18 +12,26 @@ import {
     InputAdornment,
     Breadcrumbs,
     Link,
-    Typography, Backdrop, CircularProgress
+    Typography, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions
 } from "@mui/material";
 import {
     CreateRounded,
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
+import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
+import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
+import PropTypes from "prop-types";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 
 const Product = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
-
+    const [name, setName] = React.useState('')
+    const [shortName, setShortName] = React.useState('')
+    const [stages, setStages] = React.useState(null)
     const [authToken] = useContext(AuthContext)
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
@@ -48,10 +56,32 @@ const Product = () => {
                 console.log(error)
             })
     }, [])
+    useEffect(() => { getStages() }, [])
+    const getStages = () => {
+        if (id === -1) {
+            setStages(null)
+            return
+        }
 
-    const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
-    const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
-
+        fetch(`${baseUrl}/products/${id}/stages`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setStages(data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
     const saveProduct = () => {
         const reqBody = {
             name: name,
@@ -91,16 +121,80 @@ const Product = () => {
             .finally(() => { backdropClose() })
     }
 
-    const [name, setName] = React.useState('')
-    const [shortName, setShortName] = React.useState('')
+    const columnsStages = [
+        { field: 'number', headerName: '#', width: 100 },
+        { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'dates', headerName: 'Даты', flex: 1 },
+        { field: 'stage', headerName: 'НПА', width: 200 },
+    ]
+    const stageTemplate = {
+        id: -1,
+        number: '',
+        name: '',
+        dates: '',
+        stage: ''
+    }
+    const rowsStages =
+        stages == null ?
+            [stageTemplate] :
+            stages
+                .map((val) => Object.create(stageTemplate, {
+                    id: { value: val.id },
+                    number: { value: val.number },
+                    name: { value: val.name },
+                    dates: { value: val.dates },
+                    stage: { value: `ч ${val.segment.number} ст. ${val.segment.article.number} ${val.segment.document.short_name}` },
+                }))
+    const createNewStage = () => { window.location.href = `./stage?product=${id}` }
+    const editStage = (stage_id) => { window.location.href = `./stage?id=${stage_id}` }
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
+    const [stageIdToDelete, setStageIdToDelete] = React.useState(null)
+    const showDeleteDialog = (stageId) => {
+        setStageIdToDelete(stageId)
+        setDeleteDialogVisible(true);
+    }
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
+    const deleteStage = () => {
+        closeDeleteDialog();
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/javascript', token: authToken },
+            redirect: 'follow',
+        }
+        backdropOpen();
+        fetch(`${baseUrl}/stages/${stageIdToDelete}`, requestOptions)
+            .then((response) => {
+                backdropClose()
+                if (!response.ok) {
+                    if (response.status == '401') {
+                        setSnackbarErrorOpen(true)
+                    }
+                    return false
+                }
+                return true
+            })
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setSnackbarSuccessOpen(true)
+                    getStages()
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+
+    const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
+    const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
-    const backdropClose = () => {
-        setBackdropVisible(false);
-    };
-    const backdropOpen = () => {
-        setBackdropVisible(true);
-    };
+    const backdropClose = () => { setBackdropVisible(false); };
+    const backdropOpen = () => { setBackdropVisible(true); };
 
     return (
         <Grid container spacing={2}>
@@ -169,6 +263,31 @@ const Product = () => {
                         </Button>
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
                         {isMessageUnauthorized && <MessageUnauthorized />}
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12}>
+                        <CrudDataGrid
+                            rows={rowsStages}
+                            columns={columnsStages}
+                            onCreateNewRecordHandler={createNewStage}
+                            onEditRecordHandler={editStage}
+                            onDeleteRecordHandler={showDeleteDialog}
+                        />
+                        <DialogActionConfirmation
+                            onOk={deleteStage}
+                            onCancel={closeDeleteDialog}
+                            open={deleteDialogVisible}
+                        >
+                            Удалить выбранную запись? Данное действие будет невозможно отменить.
+                        </DialogActionConfirmation>
+                        <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                            Запись успешно удалена
+                        </SnackbarSuccess>
+                        <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                            Ошибка: пользователь не авторизован <br />
+                            <Button href={'./login'} color="inherit" size="small">
+                                Войти
+                            </Button>
+                        </SnackbarError>
                     </Grid>
                 </Stack>
             </Grid>
