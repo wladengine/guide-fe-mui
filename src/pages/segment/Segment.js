@@ -262,7 +262,7 @@ const Segment = () => {
                 }))
     const columnsFeatures = [
         { field: 'number', headerName: '#', width: 50 },
-        { field: 'product', headerName: 'Продукт', flex: 1 },
+        { field: 'product', headerName: 'Инвест.инструмент', flex: 1 },
         { field: 'parameter', headerName: 'Параметр', flex: 1 },
         { field: 'summary', headerName: 'Описание', flex: 1 }
     ];

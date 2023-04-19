@@ -536,7 +536,7 @@ const Feature = () => {
                     }}
                     id={'product'}
                     options={optionsProducts}
-                    renderInput={(params) => <TextField {...params} label={'Продукт'} />}
+                    renderInput={(params) => <TextField {...params} label={'Инвест.инструмент'} />}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                 />
                 <Autocomplete

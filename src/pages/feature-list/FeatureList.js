@@ -30,7 +30,7 @@ const FeatureList = () => {
     }, [])
 
     const columns = [
-        { field: 'product', headerName: 'Продукт', width: 100 },
+        { field: 'product', headerName: 'Инвест.инструмент', width: 150 },
         { field: 'parameter', headerName: 'Параметр', flex: 1 },
         { field: 'segments', headerName: '#', width: 50 }
     ];
