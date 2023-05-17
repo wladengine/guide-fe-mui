@@ -99,7 +99,7 @@ const Market = () => {
             actor_id = actorsParams.id
         }
         console.log(`realm_id=${realm_id}; actor_id=${actor_id} sumParams=${sumParams}`)
-        if (realm_id !== -1 || actor_id !== -1 || sumParams != 10) {
+        if (realm_id !== -1 || actor_id !== -1 || sumParams !== -1) {
             setNoFilterSelected(false)
             let urlRealmsFilters = ''
             if (realm_id !== -1) {
