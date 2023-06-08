@@ -162,7 +162,7 @@ const Dashboard = () => {
     const paramsFiltersRows =
         groups && groups
             .map((val, index) => {
-                const filteredParams = val.parameters.map((val_p) => {
+                const filteredParams = val.parameters.sort((a, b) => a.id - b.id).map((val_p) => {
                     return (
                         <FormControlLabel
                             key={val_p.id}
