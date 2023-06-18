@@ -25,7 +25,7 @@ import MessageUnauthorized from "../../components/message-unauthorized/MessageUn
 import ru from 'date-fns/locale/ru';
 import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-
+import {getCookie, ref} from '../../utils/CookiesProvider'
 const Document = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
@@ -35,7 +35,11 @@ const Document = () => {
     const [authToken] = useContext(AuthContext)
     const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
+    useEffect(ref, []);
+
     useEffect(() => {
+        const authToken = getCookie('authToken')
+        console.log(authToken, 'authToken')
         fetch(`${baseUrl}/documents/${id}`, {
             method: 'GET',
             mode: 'cors',
@@ -95,6 +99,7 @@ const Document = () => {
         const requestOptions = {
             method: isPOST ? 'POST' : 'PATCH',
             headers: { 'Content-Type': 'application/javascript', token: authToken },
+            mode: 'cors',
             body: reqJSON,
             redirect: 'follow',
         }
