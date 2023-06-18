@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
 
+const baseUrl = 'http://487346.msk-kvm.ru:3333'
+// const baseUrl = 'http://487346.msk-kvm.ru:3333'
+
 const Login = () => {
     const [authToken, setAuthToken] = useContext(AuthContext)
     const [email, setEmail] = React.useState('')
@@ -28,22 +31,32 @@ const Login = () => {
     const makeAuth = () => {
         const requestOptions = {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/javascript' },
             body: `{ "Email": "${email}", "Pass": "${password}" }`,
             redirect: 'follow',
         }
-        fetch('http://62.3.58.179:3333/login', requestOptions)
+        fetch(`${baseUrl}/login`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     alert('Error while auth')
                     return null
                 }
-                return response.json()
+
+                const cookieHeader = response.headers//.get("Set-Cookie");
+                console.log(cookieHeader, 'cookieHeader')
+
+                // const cookies = cookieHeader.split(";").map(cookie => cookie.trim());
+                //
+                // console.log(cookies, 'cookies')
+                // console.log(response.body, 'response')
+                //return response.json()
             })
             .then((data) => {
-                setAuthToken(data.Token)
-                document.cookie = `authToken=${data.Token}`
-                console.log(authToken)
+                console.log(data, 'data')
+                // setAuthToken(data.Token)
+                // document.cookie = `authToken=${data.Token}`
+                // console.log(authToken)
             })
             .catch(function (error) {
                 console.log(error)
