@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
 import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
+import {baseUrl} from "../../globalConstants";
 
 const ParameterList = () => {
     const [products, setProducts] = React.useState(null)
-
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         backdropOpen()

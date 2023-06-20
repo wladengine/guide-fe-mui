@@ -21,6 +21,7 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
+import {baseUrl} from "../../globalConstants";
 
 const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -35,8 +36,6 @@ const Article = () => {
     const [segments, setSegments] = React.useState(null)
     const [segmentIdToDelete, setSegmentIdToDelete] = React.useState(null)
     const [authToken] = useContext(AuthContext)
-
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         fetch(`${baseUrl}/articles/${id}`, {

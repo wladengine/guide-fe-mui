@@ -10,10 +10,6 @@ import Typography from "@mui/material/Typography";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CardHeader from "@mui/material/CardHeader";
-import Card from "@mui/material/Card";
-
-const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
 const ProductTimeline = ({ data }) => {
     return (typeof data == 'undefined' || data == null || data.length == 0) ?

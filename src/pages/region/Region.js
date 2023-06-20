@@ -20,6 +20,7 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
+import {baseUrl} from "../../globalConstants";
 
 const Region = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -27,7 +28,6 @@ const Region = () => {
     const [name, setName] = React.useState('')
 
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         backdropOpen()

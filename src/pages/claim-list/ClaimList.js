@@ -5,12 +5,11 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
+import {baseUrl} from "../../globalConstants";
 
 const ClaimList = () => {
     const [claims, setClaims] = React.useState(null)
     const [authToken] = useContext(AuthContext)
-
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => { getClaims() }, [])
     const getClaims = () => {

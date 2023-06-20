@@ -19,8 +19,8 @@ import {
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
 import TextField from "@mui/material/TextField";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Stage = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -35,18 +35,8 @@ const Stage = () => {
 
     const [authToken] = useContext(AuthContext)
 
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     useEffect(() => {
-        fetch(`${baseUrl}/stages/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/stages/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 if (!response.ok) {
                     GetProduct(product)

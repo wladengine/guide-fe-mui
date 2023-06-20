@@ -26,6 +26,7 @@ import ru from 'date-fns/locale/ru';
 import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {getCookie, ref} from '../../utils/CookiesProvider'
+import {baseUrl} from "../../globalConstants";
 const Document = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
@@ -33,7 +34,6 @@ const Document = () => {
     const [articleIdToDelete, setArticleIdToDelete] = React.useState(null)
 
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(ref, []);
 

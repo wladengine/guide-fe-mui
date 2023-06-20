@@ -21,13 +21,13 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import {baseUrl} from "../../globalConstants";
 
 const Claim = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
 
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     const [clause, setClause] = React.useState('')
     const [product, setProduct] = React.useState('')

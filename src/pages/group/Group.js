@@ -20,14 +20,13 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
+import {baseUrl} from "../../globalConstants";
 
 const Group = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
 
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     useEffect(() => {
         fetch(`${baseUrl}/groups/${id}`, {
             method: 'GET',

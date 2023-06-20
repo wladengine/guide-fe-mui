@@ -3,6 +3,7 @@ import {
     Grid, Box, Stack, Card, CardHeader, CardContent, Typography, CircularProgress, Backdrop, Slider
 } from "@mui/material";
 import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
+import {baseUrl} from "../../globalConstants";
 
 const FoundClaimRecord = ({productName, realmName, feeName, clause}) => {
     return (
@@ -33,8 +34,6 @@ const Market = () => {
     const [realmsParams, setRealmsParams] = React.useState(-1)
     const [actorsParams, setActorsParams] = React.useState(-1)
     const [sumParams, setSumParams] = React.useState(0)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     useEffect(() => {
         fetch(`${baseUrl}/realms`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.

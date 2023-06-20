@@ -6,10 +6,9 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import TermItem from "../../components/term-item/TermItem";
 import Stack from "@mui/material/Stack";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Terms = () => {
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     const [terms, setTerms] = React.useState([])
     const [searchText, setSearchText] = React.useState('')
     const [btnSearchClick, setBtnSearchClick] = React.useState(0)
@@ -18,15 +17,7 @@ const Terms = () => {
         if (searchText != null && searchText.length > 0) {
             url += 'q=' + searchText
         }
-        fetch(url, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(url, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

@@ -25,6 +25,7 @@ import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
+import {baseUrl} from "../../globalConstants";
 
 const Product = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -33,7 +34,6 @@ const Product = () => {
     const [shortName, setShortName] = React.useState('')
     const [stages, setStages] = React.useState(null)
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         fetch(`${baseUrl}/products/${id}`, {

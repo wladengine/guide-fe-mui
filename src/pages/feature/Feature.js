@@ -30,8 +30,7 @@ import PropTypes from 'prop-types';
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-
-const baseUrl = 'http://487346.msk-kvm.ru:3333'
+import {baseUrl} from "../../globalConstants";
 
 function AddSegmentDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;

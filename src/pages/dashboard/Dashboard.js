@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import css from './dashboard.module.css'
 import ProductSegmentRow from "../../components/product-segment-row/ProductSegmentRow";
 import {Backdrop, CircularProgress} from "@mui/material";
+import {baseUrl} from "../../globalConstants";
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -17,7 +18,6 @@ const Dashboard = () => {
     const [filterParams, setFilterParams] = React.useState([])
     const [productParams, setProductParams] = React.useState([])
     const [collapsedMenuItems, setCollapsedMenuItems] = React.useState([])
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
 
     useEffect(() => {
         fetch(`${baseUrl}/groups`, {

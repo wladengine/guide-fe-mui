@@ -2,12 +2,9 @@ import React, {useEffect} from 'react'
 import css from './map.module.css'
 import Box from "@mui/material/Box";
 import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MapSearchResult from "../../components/map-search-result/MapSearchResult";
+import {baseUrl} from "../../globalConstants";
 
 function getRegionOptions(regions) {
     return regions && regions
@@ -46,7 +43,6 @@ function getFoundationOptions(foundations) {
 }
 
 const SearchBlock = () => {
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
     const [regions, setRegions] = React.useState(null)
     const [foundObjects, setFoundObjects] = React.useState(null)
     const [foundations, setFoundations] = React.useState(null)

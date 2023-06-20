@@ -13,9 +13,7 @@ import {
     Divider,
 } from "@mui/material";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
-
-const baseUrl = 'http://487346.msk-kvm.ru:3333'
-// const baseUrl = 'http://487346.msk-kvm.ru:3333'
+import {baseUrl} from "../../globalConstants";
 
 const Login = () => {
     const [authToken, setAuthToken] = useContext(AuthContext)

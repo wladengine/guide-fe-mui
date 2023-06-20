@@ -7,22 +7,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import css from "../dashboard/dashboard.module.css";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Timelines = () => {
     const [products, setProducts] = React.useState(null)
     const [timelines, setTimelines] = React.useState(null)
     const [productParams, setProductParams] = React.useState([])
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
     useEffect(() => {
-        fetch(`${baseUrl}/stages`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/stages`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

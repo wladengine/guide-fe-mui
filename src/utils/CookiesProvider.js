@@ -1,3 +1,5 @@
+import {baseUrl} from "../globalConstants";
+
 export function getCookie(cname) {
     let name = cname + '='
     let decodedCookie = decodeURIComponent(document.cookie)
@@ -13,7 +15,6 @@ export function getCookie(cname) {
     }
     return ''
 }
-const baseUrl = 'http://487346.msk-kvm.ru:3333'
 function refreshAuthCookie() {
     console.log('refreshing token...')
     fetch(`${baseUrl}/refresh`, {

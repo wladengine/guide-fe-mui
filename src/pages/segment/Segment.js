@@ -31,8 +31,7 @@ import AutocompleteCombobox from "../../components/autocomplete-combobox/Autocom
 import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-
-const baseUrl = 'http://487346.msk-kvm.ru:3333'
+import {baseUrl} from "../../globalConstants";
 
 function AddFeatureDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;

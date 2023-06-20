@@ -5,25 +5,16 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const TermList = () => {
     const [terms, setTerms] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     useEffect(() => { getClaims() }, [])
     const getClaims = () => {
         backdropOpen()
-        fetch(`${baseUrl}/terms`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/terms`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

@@ -19,8 +19,7 @@ import {
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import {baseUrl} from "../../globalConstants";
 
 const Foundation = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -28,8 +27,6 @@ const Foundation = () => {
     const [description, setDescription] = React.useState('')
 
     const [authToken] = useContext(AuthContext)
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
-
     useEffect(() => {
         fetch(`${baseUrl}/foundations/${id}`, {
             method: 'GET',

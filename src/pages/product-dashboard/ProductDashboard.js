@@ -8,9 +8,9 @@ import {
     Divider
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import {baseUrl} from "../../globalConstants";
 
 const ProductDashboard = () => {
-    const baseUrl = 'http://487346.msk-kvm.ru:3333'
     const [features, setFeatures] = React.useState(null)
     useEffect(() => {
         backdropOpen();
