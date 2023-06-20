@@ -26,15 +26,7 @@ const Timelines = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/products`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

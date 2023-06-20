@@ -19,7 +19,7 @@ import {
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Foundation = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -28,15 +28,7 @@ const Foundation = () => {
 
     const [authToken] = useContext(AuthContext)
     useEffect(() => {
-        fetch(`${baseUrl}/foundations/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/foundations/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

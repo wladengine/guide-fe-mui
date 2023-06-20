@@ -44,15 +44,7 @@ const Term = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/documents`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

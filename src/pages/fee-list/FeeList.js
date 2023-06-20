@@ -1,22 +1,14 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
 import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const FeeList = () => {
     const [fees, setFees] = React.useState(null)
 
     useEffect(() => {
         backdropOpen()
-        fetch(`${baseUrl}/fees`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/fees`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

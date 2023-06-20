@@ -10,3 +10,14 @@ export const standardGetRequestWithoutCookies = {
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
 }
+
+export const standardGetRequestWithCookies = {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+}

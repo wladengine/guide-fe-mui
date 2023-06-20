@@ -30,7 +30,7 @@ import PropTypes from 'prop-types';
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 function AddSegmentDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -50,15 +50,7 @@ function AddSegmentDialog(props) {
     const [articles, setArticles] = React.useState(null)
     const [segments, setSegments] = React.useState(null)
     useEffect(() => {
-        fetch(`${baseUrl}/documents`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -133,15 +125,7 @@ function AddSegmentDialog(props) {
         if (documentId == null) {
             documentId = document
         }
-        fetch(`${baseUrl}/documents/${documentId}/articles`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${documentId}/articles`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -157,15 +141,7 @@ function AddSegmentDialog(props) {
         if (articleId == null) {
             articleId = article
         }
-        fetch(`${baseUrl}/articles/${articleId}/segments`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/articles/${articleId}/segments`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -258,15 +234,7 @@ const Feature = () => {
     const [authToken] = useContext(AuthContext)
 
     useEffect(() => {
-        fetch(`${baseUrl}/features/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/features/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -290,15 +258,7 @@ const Feature = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/parameters`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/parameters`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -310,15 +270,7 @@ const Feature = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/products`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

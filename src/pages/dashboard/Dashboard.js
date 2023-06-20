@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import css from './dashboard.module.css'
 import ProductSegmentRow from "../../components/product-segment-row/ProductSegmentRow";
 import {Backdrop, CircularProgress} from "@mui/material";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -20,15 +20,7 @@ const Dashboard = () => {
     const [collapsedMenuItems, setCollapsedMenuItems] = React.useState([])
 
     useEffect(() => {
-        fetch(`${baseUrl}/groups`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -40,15 +32,7 @@ const Dashboard = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/products`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -93,15 +77,7 @@ const Dashboard = () => {
 
             backdropOpen()
 
-            fetch(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`, {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                referrerPolicy: 'no-referrer',
-            })
+            fetch(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`, standardGetRequestWithoutCookies)
                 .then((response) => {
                     return response.json()
                 })

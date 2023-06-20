@@ -21,7 +21,7 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Claim = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -38,15 +38,7 @@ const Claim = () => {
     const [fees, setFees] = React.useState(null)
 
     useEffect(() => {
-        fetch(`${baseUrl}/claims/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/claims/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -61,15 +53,7 @@ const Claim = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/products`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -81,15 +65,7 @@ const Claim = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/realms`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/realms`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -101,15 +77,7 @@ const Claim = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/fees`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/fees`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

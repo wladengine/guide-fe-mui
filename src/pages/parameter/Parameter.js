@@ -21,7 +21,7 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Parameter = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -30,15 +30,7 @@ const Parameter = () => {
     const [authToken] = useContext(AuthContext)
 
     useEffect(() => {
-        fetch(`${baseUrl}/parameters/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/parameters/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -51,15 +43,7 @@ const Parameter = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/groups`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

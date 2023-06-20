@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
 import Stack from "@mui/material/Stack";
 import MapSearchResult from "../../components/map-search-result/MapSearchResult";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 function getRegionOptions(regions) {
     return regions && regions
@@ -50,15 +50,7 @@ const SearchBlock = () => {
     const [foundationParams, setFoundationParams] = React.useState(-1)
 
     useEffect(() => {
-        fetch(`${baseUrl}/regions`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/regions`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -70,15 +62,7 @@ const SearchBlock = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/foundations`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/foundations`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -118,15 +102,7 @@ const SearchBlock = () => {
             }
             let fetchUrl = `${baseUrl}/objects?${urlRegionFilters}${urlFoundationFilters}`
             console.log(fetchUrl)
-            fetch(fetchUrl, {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                referrerPolicy: 'no-referrer',
-            })
+            fetch(fetchUrl, standardGetRequestWithoutCookies)
                 .then((response) => {
                     return response.json()
                 })

@@ -21,7 +21,7 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -38,15 +38,7 @@ const Article = () => {
     const [authToken] = useContext(AuthContext)
 
     useEffect(() => {
-        fetch(`${baseUrl}/articles/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/articles/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 if (!response.ok) {
                     GetDocument(document)
@@ -69,15 +61,7 @@ const Article = () => {
     }, [])
     useEffect(() => { getSegments() }, [])
     const getSegments = () => {
-        fetch(`${baseUrl}/articles/${id}/segments`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/articles/${id}/segments`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -94,15 +78,7 @@ const Article = () => {
     }
 
     const GetDocument = (documentId) => {
-        fetch(`${baseUrl}/documents/${documentId}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${documentId}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

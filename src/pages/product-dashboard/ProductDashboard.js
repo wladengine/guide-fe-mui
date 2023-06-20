@@ -8,21 +8,13 @@ import {
     Divider
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const ProductDashboard = () => {
     const [features, setFeatures] = React.useState(null)
     useEffect(() => {
         backdropOpen();
-        fetch(`${baseUrl}/features`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/features`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

@@ -3,7 +3,7 @@ import {
     Grid, Box, Stack, Card, CardHeader, CardContent, Typography, CircularProgress, Backdrop, Slider
 } from "@mui/material";
 import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const FoundClaimRecord = ({productName, realmName, feeName, clause}) => {
     return (
@@ -35,15 +35,7 @@ const Market = () => {
     const [actorsParams, setActorsParams] = React.useState(-1)
     const [sumParams, setSumParams] = React.useState(0)
     useEffect(() => {
-        fetch(`${baseUrl}/realms`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/realms`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -55,15 +47,7 @@ const Market = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/actors`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/actors`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -115,15 +99,7 @@ const Market = () => {
             let fetchUrl = `${baseUrl}/claims?${urlRealmsFilters}${urlActorsFilters}${urlSumParams}`
             console.log(fetchUrl)
             backdropOpen()
-            fetch(fetchUrl, {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                referrerPolicy: 'no-referrer',
-            })
+            fetch(fetchUrl, standardGetRequestWithoutCookies)
                 .then((response) => {
                     return response.json()
                 })

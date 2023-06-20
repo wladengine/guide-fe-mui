@@ -5,7 +5,7 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const RegionList = () => {
     const [regions, setRegions] = React.useState(null)
@@ -14,15 +14,7 @@ const RegionList = () => {
     useEffect(() => { getRegions() }, [])
     const getRegions = () => {
         backdropOpen()
-        fetch(`${baseUrl}/regions`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/regions`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

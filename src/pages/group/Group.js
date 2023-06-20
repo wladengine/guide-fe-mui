@@ -20,7 +20,7 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Group = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -28,15 +28,7 @@ const Group = () => {
 
     const [authToken] = useContext(AuthContext)
     useEffect(() => {
-        fetch(`${baseUrl}/groups/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/groups/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

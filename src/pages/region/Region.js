@@ -20,7 +20,7 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Region = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -31,15 +31,7 @@ const Region = () => {
 
     useEffect(() => {
         backdropOpen()
-        fetch(`${baseUrl}/regions/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/regions/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

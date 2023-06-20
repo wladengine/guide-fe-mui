@@ -68,15 +68,7 @@ const Stage = () => {
             //.finally(() => { console.debug(segment) })
     }, [])
     const GetDocuments = () => {
-        fetch(`${baseUrl}/documents`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -89,15 +81,7 @@ const Stage = () => {
     }
 
     const GetProduct = (productId) => {
-        fetch(`${baseUrl}/products/${productId}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products/${productId}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -182,15 +166,7 @@ const Stage = () => {
         if (documentId == null) {
             documentId = document
         }
-        fetch(`${baseUrl}/documents/${documentId}/articles`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${documentId}/articles`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -208,15 +184,7 @@ const Stage = () => {
         if (articleId == null) {
             articleId = article
         }
-        fetch(`${baseUrl}/articles/${articleId}/segments`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/articles/${articleId}/segments`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

@@ -5,7 +5,7 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const ObjectList = () => {
     const [objects, setObjects] = React.useState(null)
@@ -14,15 +14,7 @@ const ObjectList = () => {
     useEffect(() => { getObjects() }, [])
     const getObjects = () => {
         backdropOpen()
-        fetch(`${baseUrl}/objects`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/objects`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

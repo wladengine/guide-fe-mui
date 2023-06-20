@@ -1,4 +1,4 @@
-import {baseUrl} from "../globalConstants";
+import {baseUrl, standardGetRequestWithCookies} from "../globalConstants";
 
 export function getCookie(cname) {
     let name = cname + '='
@@ -17,16 +17,7 @@ export function getCookie(cname) {
 }
 function refreshAuthCookie() {
     console.log('refreshing token...')
-    fetch(`${baseUrl}/refresh`, {
-        method: 'GET',
-        credentials: 'include',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
-    })
+    fetch(`${baseUrl}/refresh`, standardGetRequestWithCookies)
         .then((response) => {
             const cookies = response.headers.get('Set-Cookie');
             console.log(cookies);

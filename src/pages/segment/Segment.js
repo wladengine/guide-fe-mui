@@ -31,7 +31,7 @@ import AutocompleteCombobox from "../../components/autocomplete-combobox/Autocom
 import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 function AddFeatureDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -47,15 +47,7 @@ function AddFeatureDialog(props) {
     const [features, setFeatures] = React.useState(null)
 
     useEffect(() => {
-        fetch(`${baseUrl}/features`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/features`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -147,15 +139,7 @@ const Segment = () => {
     const [authToken] = useContext(AuthContext)
 
     useEffect(() => {
-        fetch(`${baseUrl}/segments/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/segments/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 if (!response.ok) {
                     GetArticle(article)
@@ -178,15 +162,7 @@ const Segment = () => {
     }, [])
     useEffect(() => { GetFeatures() }, [])
     const GetFeatures = () => {
-        fetch(`${baseUrl}/segments/${id}/features`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/segments/${id}/features`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -200,15 +176,7 @@ const Segment = () => {
     }
 
     const GetDocument = (documentId) => {
-        fetch(`${baseUrl}/documents/${documentId}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${documentId}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -220,15 +188,7 @@ const Segment = () => {
             })
     }
     const GetArticle = (articleId) => {
-        fetch(`${baseUrl}/articles/${articleId}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/articles/${articleId}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -330,15 +290,7 @@ const Segment = () => {
                 const fff = features.find((x) => x.id === feature_id)
                 console.log(fff, 'fff')
             }
-            fetch(`${baseUrl}/features/${feature_id}`, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                referrerPolicy: 'no-referrer',
-            })
+            fetch(`${baseUrl}/features/${feature_id}`, standardGetRequestWithoutCookies)
                 .then((response) => {
                     return response.json()
                 })

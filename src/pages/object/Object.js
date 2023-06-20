@@ -21,7 +21,7 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Object = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -38,15 +38,7 @@ const Object = () => {
     const [foundations, setFoundations] = React.useState(null)
 
     useEffect(() => {
-        fetch(`${baseUrl}/objects/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/objects/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -62,15 +54,7 @@ const Object = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/regions`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/regions`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -82,15 +66,7 @@ const Object = () => {
             })
     }, [])
     useEffect(() => {
-        fetch(`${baseUrl}/foundations`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/foundations`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

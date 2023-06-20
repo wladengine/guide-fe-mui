@@ -26,7 +26,7 @@ import ru from 'date-fns/locale/ru';
 import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {getCookie, ref} from '../../utils/CookiesProvider'
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 const Document = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
@@ -40,15 +40,7 @@ const Document = () => {
     useEffect(() => {
         const authToken = getCookie('authToken')
         console.log(authToken, 'authToken')
-        fetch(`${baseUrl}/documents/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -64,15 +56,7 @@ const Document = () => {
     }, [])
     useEffect(() => { getArticles() }, [])
     const getArticles = () => {
-        fetch(`${baseUrl}/documents/${id}/articles`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/documents/${id}/articles`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

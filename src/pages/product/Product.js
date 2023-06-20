@@ -25,7 +25,7 @@ import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const Product = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -36,15 +36,7 @@ const Product = () => {
     const [authToken] = useContext(AuthContext)
 
     useEffect(() => {
-        fetch(`${baseUrl}/products/${id}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -63,15 +55,7 @@ const Product = () => {
             return
         }
 
-        fetch(`${baseUrl}/products/${id}/stages`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/products/${id}/stages`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })

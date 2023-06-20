@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
 import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
 import { getCookie } from '../../utils/CookiesProvider'
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const GroupList = () => {
     const [groups, setGroups] = React.useState(null)
@@ -10,16 +10,7 @@ const GroupList = () => {
     useEffect(() => {
         backdropOpen()
         const authToken = getCookie('authToken')
-        fetch(`${baseUrl}/groups`, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Cookie': authToken
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-        })
+        fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
