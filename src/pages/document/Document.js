@@ -26,7 +26,12 @@ import ru from 'date-fns/locale/ru';
 import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {getCookie, ref} from '../../utils/CookiesProvider'
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 const Document = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
@@ -80,13 +85,10 @@ const Document = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            mode: 'cors',
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/documents` : `${baseUrl}/documents/${id}`
         fetch(fetchUrl, requestOptions)

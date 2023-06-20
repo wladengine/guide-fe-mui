@@ -21,7 +21,12 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 
 const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -102,12 +107,10 @@ const Article = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/articles` : `${baseUrl}/articles/${id}`
         fetch(fetchUrl, requestOptions)

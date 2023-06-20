@@ -21,3 +21,19 @@ export const standardGetRequestWithCookies = {
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
 }
+
+export const getPostParametersWithCookies = (reqJSON) => ({
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/javascript' },
+    body: reqJSON,
+    redirect: 'follow',
+})
+
+export const getPatchParametersWithCookies = (reqJSON) => ({
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/javascript' },
+    body: reqJSON,
+    redirect: 'follow',
+})

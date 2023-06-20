@@ -13,7 +13,7 @@ import {
     Divider,
 } from "@mui/material";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
-import {baseUrl} from "../../globalConstants";
+import {baseUrl, getPostParametersWithCookies} from "../../globalConstants";
 
 const Login = () => {
     const [authToken, setAuthToken] = useContext(AuthContext)
@@ -27,34 +27,16 @@ const Login = () => {
         event.preventDefault();
     };
     const makeAuth = () => {
-        const requestOptions = {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/javascript' },
-            body: `{ "Email": "${email}", "Pass": "${password}" }`,
-            redirect: 'follow',
-        }
+        const requestOptions = getPostParametersWithCookies(`{ "Email": "${email}", "Pass": "${password}" }`)
         fetch(`${baseUrl}/login`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     alert('Error while auth')
                     return null
                 }
-
-                const cookieHeader = response.headers//.get("Set-Cookie");
-                console.log(cookieHeader, 'cookieHeader')
-
-                // const cookies = cookieHeader.split(";").map(cookie => cookie.trim());
-                //
-                // console.log(cookies, 'cookies')
-                // console.log(response.body, 'response')
-                //return response.json()
             })
             .then((data) => {
                 console.log(data, 'data')
-                // setAuthToken(data.Token)
-                // document.cookie = `authToken=${data.Token}`
-                // console.log(authToken)
             })
             .catch(function (error) {
                 console.log(error)

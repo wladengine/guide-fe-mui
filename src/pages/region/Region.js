@@ -20,7 +20,12 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 
 const Region = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -56,12 +61,10 @@ const Region = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/regions` : `${baseUrl}/regions/${id}`
         fetch(fetchUrl, requestOptions)

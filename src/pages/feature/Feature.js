@@ -30,7 +30,12 @@ import PropTypes from 'prop-types';
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 
 function AddSegmentDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -294,12 +299,10 @@ const Feature = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         const fetchUrl = isPOST ? `${baseUrl}/features` : `${baseUrl}/features/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {

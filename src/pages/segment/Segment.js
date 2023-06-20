@@ -31,7 +31,12 @@ import AutocompleteCombobox from "../../components/autocomplete-combobox/Autocom
 import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 
 function AddFeatureDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -233,12 +238,10 @@ const Segment = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/segments` : `${baseUrl}/segments/${id}`
         fetch(fetchUrl, requestOptions)
@@ -318,12 +321,10 @@ const Segment = () => {
                         }
                         const reqJSON = JSON.stringify(reqBody)
                         const isPOST = (id ?? -1) <= 0
-                        const requestOptions = {
-                            method: isPOST ? 'POST' : 'PATCH',
-                            headers: { 'Content-Type': 'application/javascript', token: authToken },
-                            body: reqJSON,
-                            redirect: 'follow',
-                        }
+                        const requestOptions = isPOST
+                            ? getPostParametersWithCookies(reqJSON)
+                            : getPatchParametersWithCookies(reqJSON)
+
                         const fetchUrl = isPOST ? `${baseUrl}/features` : `${baseUrl}/features/${id}`
                         fetch(fetchUrl, requestOptions)
                             .then((response) => {

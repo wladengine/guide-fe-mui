@@ -21,7 +21,12 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {
+    baseUrl,
+    getPatchParametersWithCookies,
+    getPostParametersWithCookies,
+    standardGetRequestWithoutCookies
+} from "../../globalConstants";
 
 const Object = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -91,12 +96,10 @@ const Object = () => {
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
-        const requestOptions = {
-            method: isPOST ? 'POST' : 'PATCH',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            body: reqJSON,
-            redirect: 'follow',
-        }
+        const requestOptions = isPOST
+            ? getPostParametersWithCookies(reqJSON)
+            : getPatchParametersWithCookies(reqJSON)
+
         backdropOpen()
         const fetchUrl = isPOST ? `${baseUrl}/objects` : `${baseUrl}/objects/${id}`
         fetch(fetchUrl, requestOptions)
