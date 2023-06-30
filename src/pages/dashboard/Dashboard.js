@@ -10,6 +10,8 @@ import css from './dashboard.module.css'
 import ProductSegmentRow from "../../components/product-segment-row/ProductSegmentRow";
 import {Backdrop, CircularProgress} from "@mui/material";
 import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import Button from "@mui/material/Button";
+import DownloadIcon from '@mui/icons-material/Download';
 
 const Dashboard = () => {
     const [groups, setGroups] = React.useState(null)
@@ -18,6 +20,7 @@ const Dashboard = () => {
     const [filterParams, setFilterParams] = React.useState([])
     const [productParams, setProductParams] = React.useState([])
     const [collapsedMenuItems, setCollapsedMenuItems] = React.useState([])
+    const [excelUrl, setExcelUrl] = React.useState(null)
 
     useEffect(() => {
         fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
@@ -48,6 +51,7 @@ const Dashboard = () => {
         setProductParams([])
     }, [])
     useEffect(() => {
+        setExcelUrl(null)
         if (typeof productParams == 'undefined' || typeof filterParams == 'undefined') {
             console.log(`typeof productParams = ${typeof productParams}`)
             console.log(`typeof filterParams = ${typeof filterParams}`)
@@ -75,9 +79,12 @@ const Dashboard = () => {
                 return
             }
 
+            let filters = `${urlDocumentFilters}${urlParamsFilters}`
+            setExcelUrl(`${baseUrl}/features/stream?${filters}`)
+
             backdropOpen()
 
-            fetch(`${baseUrl}/features?${urlDocumentFilters}${urlParamsFilters}`, standardGetRequestWithoutCookies)
+            fetch(`${baseUrl}/features?${filters}`, standardGetRequestWithoutCookies)
                 .then((response) => {
                     return response.json()
                 })
@@ -231,6 +238,14 @@ const Dashboard = () => {
                     style={{cursor: "pointer"}}
                     onClick={() => updateCollapsedMenuItems('productList')}>раскрыть +</Typography>
             </>
+
+    const excelButton =
+        <FormGroup sx={{pt: 5, pb: 5}}>
+            <Button href={excelUrl} variant="contained" startIcon={<DownloadIcon />}>
+                Скачать excel
+            </Button>
+        </FormGroup>
+
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
         setBackdropVisible(false);
@@ -247,6 +262,7 @@ const Dashboard = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Grid item xs={3}>
+                {excelUrl === null ? '' : excelButton }
                 <b>Инструменты</b>
                 {productsFormGroup}
                 <br />
