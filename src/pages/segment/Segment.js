@@ -37,6 +37,7 @@ import {
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 function AddFeatureDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -143,6 +144,7 @@ const Segment = () => {
     const [article, setArticle] = React.useState(param_article)
     const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, []);
     useEffect(() => {
         fetch(`${baseUrl}/segments/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {

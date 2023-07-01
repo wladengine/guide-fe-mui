@@ -37,3 +37,10 @@ export const getPatchParametersWithCookies = (reqJSON) => ({
     body: reqJSON,
     redirect: 'follow',
 })
+export const getDeleteParametersWithCookies = (reqJSON) => ({
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/javascript' },
+    body: reqJSON,
+    redirect: 'follow',
+})

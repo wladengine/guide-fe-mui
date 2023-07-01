@@ -27,6 +27,7 @@ import {
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Term = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -34,6 +35,7 @@ const Term = () => {
 
     const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, []);
     useEffect(() => {
         fetch(`${baseUrl}/terms/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {

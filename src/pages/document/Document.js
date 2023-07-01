@@ -25,9 +25,9 @@ import MessageUnauthorized from "../../components/message-unauthorized/MessageUn
 import ru from 'date-fns/locale/ru';
 import DatePickerRu from "../../components/date-picker-ru/DatePickerRu";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
-import {getCookie, ref} from '../../utils/CookiesProvider'
+import {getCookie, refreshAuthCookie} from '../../utils/CookiesProvider'
 import {
-    baseUrl,
+    baseUrl, getDeleteParametersWithCookies,
     getPatchParametersWithCookies,
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
@@ -40,11 +40,9 @@ const Document = () => {
 
     const [authToken] = useContext(AuthContext)
 
-    useEffect(ref, []);
+    useEffect(refreshAuthCookie, []);
 
     useEffect(() => {
-        const authToken = getCookie('authToken')
-        console.log(authToken, 'authToken')
         fetch(`${baseUrl}/documents/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
@@ -77,7 +75,6 @@ const Document = () => {
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
     const saveDocument = () => {
-        console.log(authToken)
         const reqBody = {
             short_name: name,
             date: new Date(date).toJSON(),
@@ -145,11 +142,7 @@ const Document = () => {
     const deleteArticle = () => {
         closeDeleteDialog();
         backdropOpen();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         fetch(`${baseUrl}/articles/${articleIdToDelete}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {

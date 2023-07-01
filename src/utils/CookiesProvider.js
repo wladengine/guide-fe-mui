@@ -15,7 +15,7 @@ export function getCookie(cname) {
     }
     return ''
 }
-function refreshAuthCookie() {
+function refreshAuthCookieInternal() {
     console.log('refreshing token...')
     fetch(`${baseUrl}/refresh`, standardGetRequestWithCookies)
         .then((response) => {
@@ -30,11 +30,11 @@ function refreshAuthCookie() {
             console.log(error)
         })
 }
-export function ref() {
+export function refreshAuthCookie() {
     // Function to handle the background task
     const runBackgroundTask = () => {
         // Send a message to the worker
-        refreshAuthCookie()
+        refreshAuthCookieInternal()
     };
 
     // Run the background task immediately when the component mounts

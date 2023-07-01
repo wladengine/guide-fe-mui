@@ -12,7 +12,7 @@ import {
     InputAdornment,
     Breadcrumbs,
     Link,
-    Typography, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions
+    Typography, Backdrop, CircularProgress
 } from "@mui/material";
 import {
     CreateRounded,
@@ -20,17 +20,16 @@ import {
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import AutocompleteCombobox from "../../components/autocomplete-combobox/AutocompleteCombobox";
-import PropTypes from "prop-types";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {
-    baseUrl,
+    baseUrl, getDeleteParametersWithCookies,
     getPatchParametersWithCookies,
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Product = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -40,6 +39,7 @@ const Product = () => {
     const [stages, setStages] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, [])
     useEffect(() => {
         fetch(`${baseUrl}/products/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -148,11 +148,7 @@ const Product = () => {
     }
     const deleteStage = () => {
         closeDeleteDialog();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         backdropOpen();
         fetch(`${baseUrl}/stages/${stageIdToDelete}`, requestOptions)
             .then((response) => {

@@ -22,11 +22,12 @@ import MessageSuccessfullySaved from "../../components/message-succsessfully-sav
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {
-    baseUrl,
+    baseUrl, getDeleteParametersWithCookies,
     getPatchParametersWithCookies,
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Article = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -42,6 +43,7 @@ const Article = () => {
     const [segmentIdToDelete, setSegmentIdToDelete] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, []);
     useEffect(() => {
         fetch(`${baseUrl}/articles/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -164,11 +166,7 @@ const Article = () => {
     const deleteSegment = () => {
         closeDeleteDialog();
         backdropOpen();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         fetch(`${baseUrl}/segments/${segmentIdToDelete}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
@@ -182,7 +180,6 @@ const Article = () => {
             .then((deleteResult) => {
                 if (deleteResult) {
                     setIsSuccessfullySaved(true)
-                    // afterDelete()
                     setTimeout(setIsSuccessfullySaved, 5 * 1000, false)
                 }
             })

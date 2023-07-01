@@ -5,14 +5,16 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const TermList = () => {
     const [terms, setTerms] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
-    useEffect(() => { getClaims() }, [])
-    const getClaims = () => {
+    useEffect(refreshAuthCookie, []);
+    useEffect(() => { getTerms() }, [])
+    const getTerms = () => {
         backdropOpen()
         fetch(`${baseUrl}/terms`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -64,11 +66,7 @@ const TermList = () => {
     const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
     const deleteTerm = () => {
         closeDeleteDialog();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         backdropOpen();
         fetch(`${baseUrl}/terms/${termIdToDelete}`, requestOptions)
             .then((response) => {
@@ -84,7 +82,7 @@ const TermList = () => {
             .then((deleteResult) => {
                 if (deleteResult) {
                     setSnackbarSuccessOpen(true)
-                    getClaims()
+                    getTerms()
                 }
             })
             .catch(function (error) {
