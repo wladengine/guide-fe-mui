@@ -50,9 +50,6 @@ const Group = () => {
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
     const saveGroup = () => {
-        setSnackbarErrorOpen(true)
-        return
-        // TODO: wait until endpoint will be updated
         const reqBody = {
             name: name,
         }
@@ -98,7 +95,6 @@ const Group = () => {
         setBackdropVisible(true);
     };
 
-    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
@@ -148,9 +144,6 @@ const Group = () => {
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
                         {isMessageUnauthorized && <MessageUnauthorized />}
                     </Grid>
-                    <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
-                        Данный функционал не реализован на серверной стороне
-                    </SnackbarError>
                 </Stack>
             </Grid>
         </Grid>

@@ -30,6 +30,7 @@ import Group from "./pages/group/Group";
 import RealmList from "./pages/realm-list/RealmList";
 import Realm from "./pages/realm/Realm";
 import ActorList from "./pages/actor-list/ActorList";
+import Actor from "./pages/actor/Actor";
 import ClaimList from "./pages/claim-list/ClaimList";
 import FeeList from "./pages/fee-list/FeeList";
 import Claim from "./pages/claim/Claim";
@@ -111,8 +112,8 @@ export default function App() {
                             <Route path={'/group'} element={<Group />} />
                             <Route path={'/realm-list'} element={<RealmList />} />
                             <Route path={'/realm'} element={<Realm />} />
-
                             <Route path={'/actor-list'} element={<ActorList />} />
+                            <Route path={'/actor'} element={<Actor />} />
                             <Route path={'/fee-list'} element={<FeeList />} />
                             <Route path={'/claim-list'} element={<ClaimList />} />
                             <Route path={'/claim'} element={<Claim />} />

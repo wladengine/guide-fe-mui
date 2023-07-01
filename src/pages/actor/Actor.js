@@ -25,14 +25,14 @@ import {
 } from "../../globalConstants";
 import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
-const Realm = () => {
+const Actor = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
     const [description, setDescription] = React.useState('')
 
     useEffect(refreshAuthCookie, [])
     useEffect(() => {
-        fetch(`${baseUrl}/realms/${id}`, standardGetRequestWithoutCookies)
+        fetch(`${baseUrl}/actors/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
@@ -47,7 +47,7 @@ const Realm = () => {
     const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
-    const saveRealm = () => {
+    const saveActor = () => {
         const reqBody = {
             description: description,
         }
@@ -58,7 +58,7 @@ const Realm = () => {
             : getPatchParametersWithCookies(reqJSON)
 
         backdropOpen()
-        const fetchUrl = isPOST ? `${baseUrl}/realms` : `${baseUrl}/realms/${id}`
+        const fetchUrl = isPOST ? `${baseUrl}/actors` : `${baseUrl}/actors/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
                 if (!response.ok) {
@@ -132,7 +132,7 @@ const Realm = () => {
                         </FormControl>
                     </Grid>
                     <Grid item lg={12} md={12} sm={12}>
-                        <Button onClick={saveRealm}>
+                        <Button onClick={saveActor}>
                             Сохранить
                         </Button>
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
@@ -144,4 +144,4 @@ const Realm = () => {
     )
 }
 
-export default Realm
+export default Actor

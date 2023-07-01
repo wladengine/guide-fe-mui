@@ -1,12 +1,18 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {Backdrop, Breadcrumbs, Button, CircularProgress, Link, Stack, Typography} from "@mui/material";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const ActorList = () => {
     const [products, setProducts] = React.useState(null)
 
-    useEffect(() => {
+    useEffect(refreshAuthCookie, [])
+    useEffect(() => { getActors() }, [])
+    const getActors = () => {
         backdropOpen()
         fetch(`${baseUrl}/actors`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -19,7 +25,7 @@ const ActorList = () => {
                 console.log(error)
             })
             .finally(() => { backdropClose() })
-    }, [])
+    }
 
     const columns = [
         { field: 'type', headerName: 'Тип', flex: 1 },
@@ -37,9 +43,9 @@ const ActorList = () => {
             name: { value: val.name },
         }))
 
-    const onCreateNewRecordHandler = () => {}
-    const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = (id) => {}
+    const onCreateNewRecordHandler = () => { window.location.href = `./actor?id=-1` }
+    const onDeleteRecordHandler = (id) => { showDeleteDialog(id) }
+    const onEditRecordHandler = (id) => { window.location.href = `./actor?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -48,6 +54,43 @@ const ActorList = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
+    const [objectIdToDelete, setObjectIdToDelete] = React.useState(null)
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
+    const deleteActor = () => {
+        closeDeleteDialog();
+        const requestOptions = getDeleteParametersWithCookies('')
+        backdropOpen();
+        fetch(`${baseUrl}/actors/${objectIdToDelete}`, requestOptions)
+            .then((response) => {
+                backdropClose()
+                if (!response.ok) {
+                    if (response.status == '401') {
+                        setSnackbarErrorOpen(true)
+                    }
+                    return false
+                }
+                return true
+            })
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setSnackbarSuccessOpen(true)
+                    getActors()
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+    const showDeleteDialog = (object_id) => {
+        setObjectIdToDelete(object_id)
+        setDeleteDialogVisible(true);
+    }
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
 
     return (
         <Stack spacing={2}>
@@ -72,8 +115,23 @@ const ActorList = () => {
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
-                showNewRecordButton={false}
             />
+            <DialogActionConfirmation
+                onOk={deleteActor}
+                onCancel={closeDeleteDialog}
+                open={deleteDialogVisible}
+            >
+                Удалить выбранную запись? Данное действие будет невозможно отменить.
+            </DialogActionConfirmation>
+            <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                Запись успешно удалена
+            </SnackbarSuccess>
+            <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                Ошибка: пользователь не авторизован <br />
+                <Button href={'./login'} color="inherit" size="small">
+                    Войти
+                </Button>
+            </SnackbarError>
         </Stack>
     )
 }
