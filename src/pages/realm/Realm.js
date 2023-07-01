@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useContext } from 'react'
-import AuthContext from "../../components/auth-context/AuthContext";
 import {
     Grid,
     Button,
@@ -19,8 +17,6 @@ import {
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import {
     baseUrl,
     getPatchParametersWithCookies,
@@ -29,33 +25,19 @@ import {
 } from "../../globalConstants";
 import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
-const Parameter = () => {
+const Realm = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
-
-    const [authToken] = useContext(AuthContext)
+    const [description, setDescription] = React.useState('')
 
     useEffect(refreshAuthCookie, [])
     useEffect(() => {
-        fetch(`${baseUrl}/parameters/${id}`, standardGetRequestWithoutCookies)
+        fetch(`${baseUrl}/realms/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
             .then((data) => {
-                setName(data.name)
-                setGroup({id: data.group.id, label: data.group.name})
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    }, [])
-    useEffect(() => {
-        fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                setGroups(data)
+                setDescription(data.description)
             })
             .catch(function (error) {
                 console.log(error)
@@ -65,10 +47,9 @@ const Parameter = () => {
     const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
-    const saveParameter = () => {
+    const saveRealm = () => {
         const reqBody = {
-            name: name,
-            group: parseInt(group.id),
+            description: description,
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -77,15 +58,13 @@ const Parameter = () => {
             : getPatchParametersWithCookies(reqJSON)
 
         backdropOpen()
-        const fetchUrl = isPOST ? `${baseUrl}/parameters` : `${baseUrl}/parameters/${id}`
+        const fetchUrl = isPOST ? `${baseUrl}/realms` : `${baseUrl}/realms/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     if (response.status == '401') {
                         setIsMessageUnauthorized(true)
                     }
-                    console.log(response)
-                    console.log(response.status)
                     return null
                 }
                 return response.json()
@@ -102,10 +81,6 @@ const Parameter = () => {
             .finally(() => { backdropClose() })
     }
 
-    const [name, setName] = React.useState('')
-    const [group, setGroup] = React.useState('')
-    const [groups, setGroups] = React.useState(null)
-
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
         setBackdropVisible(false);
@@ -113,23 +88,6 @@ const Parameter = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
-
-    const optionsGroups =
-        groups === null ?
-            [] :
-            groups
-                .sort((a, b) => {
-                    const nameA = a.name.toUpperCase()
-                    const nameB = b.name.toUpperCase()
-                    if (nameA < nameB) {
-                        return -1
-                    }
-                    if (nameA > nameB) {
-                        return 1
-                    }
-                    return 0
-                })
-                .map((val) => ({id: val.id, label: val.name}))
 
     return (
         <Grid container spacing={2}>
@@ -145,24 +103,25 @@ const Parameter = () => {
                         <Link underline="hover" color="inherit" href="/admin">
                             Управление данными
                         </Link>
-                        <Link underline="hover" color="inherit" href="/parameter-list">
-                            Инструменты
+                        <Link underline="hover" color="inherit" href="/foundation-list">
+                            Сферы для инвестирования
                         </Link>
                         <Typography key="3" color="text.primary">
-                            {name}
+                            {description}
                         </Typography>
                     </Breadcrumbs>
                     <Typography variant="h5" color="text.primary">Инструмент</Typography>
                     <Grid item lg={12} md={12} sm={12}>
                         <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="product_name">
-                                Название инструмента
+                            <InputLabel htmlFor="term_name">
+                                Название
                             </InputLabel>
                             <Input
-                                id="product_name"
-                                value={name}
+                                id="term_name"
+                                value={description}
+                                multiline
                                 onChange={(e) => {
-                                    setName(e.target.value)
+                                    setDescription(e.target.value)
                                 }}
                                 startAdornment={
                                     <InputAdornment position="start">
@@ -173,22 +132,7 @@ const Parameter = () => {
                         </FormControl>
                     </Grid>
                     <Grid item lg={12} md={12} sm={12}>
-                        <FormControl fullWidth variant="standard">
-                            <Autocomplete
-                                value={group}
-                                getOptionLabel={option => option.label}
-                                onChange={(event, newValue) => {
-                                    setGroup(newValue);
-                                }}
-                                id={'group'}
-                                options={optionsGroups}
-                                renderInput={(params) => <TextField {...params} label={'Группа параметров'} />}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12}>
-                        <Button onClick={saveParameter}>
+                        <Button onClick={saveRealm}>
                             Сохранить
                         </Button>
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
@@ -200,4 +144,4 @@ const Parameter = () => {
     )
 }
 
-export default Parameter
+export default Realm

@@ -116,7 +116,6 @@ const ProductList = () => {
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
-                showNewRecordButton={false}
             />
             <DialogActionConfirmation
                 onOk={deleteProduct}

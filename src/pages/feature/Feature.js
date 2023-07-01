@@ -31,11 +31,12 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import {
-    baseUrl,
+    baseUrl, getDeleteParametersWithCookies,
     getPatchParametersWithCookies,
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 function AddSegmentDialog(props) {
     const { onClose, value: valueProp, open, ...other } = props;
@@ -54,6 +55,8 @@ function AddSegmentDialog(props) {
     const [documents, setDocuments] = React.useState(null)
     const [articles, setArticles] = React.useState(null)
     const [segments, setSegments] = React.useState(null)
+
+    useEffect(refreshAuthCookie, [])
     useEffect(() => {
         fetch(`${baseUrl}/documents`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -331,11 +334,7 @@ const Feature = () => {
     const deleteFeature = () => {
         closeDeleteDialog();
         backdropOpen();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         fetch(`${baseUrl}/features/${id}`, requestOptions)
             .then((response) => {
                 if (!response.ok) {

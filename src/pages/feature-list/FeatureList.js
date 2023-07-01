@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {Backdrop, Breadcrumbs, Button, CircularProgress, Link, Stack, Typography} from "@mui/material";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
 
 const FeatureList = () => {
     const [features, setFeatures] = React.useState(null)
-    useEffect(() => {
+
+    useEffect(refreshAuthCookie, [])
+    useEffect(() => { getFeatures() }, [])
+
+    const getFeatures = () => {
         backdropOpen()
         fetch(`${baseUrl}/features`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -18,7 +26,7 @@ const FeatureList = () => {
                 console.log(error)
             })
             .finally(() => { backdropClose() })
-    }, [])
+    }
 
     const columns = [
         { field: 'product', headerName: 'Инвест.инструмент', width: 150 },
@@ -40,7 +48,7 @@ const FeatureList = () => {
         }))
 
     const onCreateNewRecordHandler = () => { window.location.href = `./feature?id=-1` }
-    const onDeleteRecordHandler = () => {}
+    const onDeleteRecordHandler = (id) => { showDeleteDialog(id) }
     const onEditRecordHandler = (id) => { window.location.href = `./feature?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
@@ -50,6 +58,43 @@ const FeatureList = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
+    const [objectIdToDelete, setObjectIdToDelete] = React.useState(null)
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
+    const deleteFeature = () => {
+        closeDeleteDialog();
+        const requestOptions = getDeleteParametersWithCookies('')
+        backdropOpen();
+        fetch(`${baseUrl}/features/${objectIdToDelete}`, requestOptions)
+            .then((response) => {
+                backdropClose()
+                if (!response.ok) {
+                    if (response.status == '401') {
+                        setSnackbarErrorOpen(true)
+                    }
+                    return false
+                }
+                return true
+            })
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setSnackbarSuccessOpen(true)
+                    getFeatures()
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+    const showDeleteDialog = (object_id) => {
+        setObjectIdToDelete(object_id)
+        setDeleteDialogVisible(true);
+    }
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
 
     return (
         <Stack spacing={2}>
@@ -75,6 +120,22 @@ const FeatureList = () => {
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
             />
+            <DialogActionConfirmation
+                onOk={deleteFeature}
+                onCancel={closeDeleteDialog}
+                open={deleteDialogVisible}
+            >
+                Удалить выбранную запись? Данное действие будет невозможно отменить.
+            </DialogActionConfirmation>
+            <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                Запись успешно удалена
+            </SnackbarSuccess>
+            <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                Ошибка: пользователь не авторизован <br />
+                <Button href={'./login'} color="inherit" size="small">
+                    Войти
+                </Button>
+            </SnackbarError>
         </Stack>
 
     )

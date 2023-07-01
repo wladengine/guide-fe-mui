@@ -25,13 +25,14 @@ import {
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Foundation = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
     const [description, setDescription] = React.useState('')
 
-    const [authToken] = useContext(AuthContext)
+    useEffect(refreshAuthCookie, [])
     useEffect(() => {
         fetch(`${baseUrl}/foundations/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
