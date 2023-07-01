@@ -27,6 +27,7 @@ import {
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Claim = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -42,6 +43,7 @@ const Claim = () => {
     const [fee, setFee] = React.useState('')
     const [fees, setFees] = React.useState(null)
 
+    useEffect(refreshAuthCookie, [])
     useEffect(() => {
         fetch(`${baseUrl}/claims/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {

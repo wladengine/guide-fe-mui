@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useContext } from 'react'
-import AuthContext from "../../components/auth-context/AuthContext";
 import {
     Grid,
     Button,
@@ -19,21 +17,20 @@ import {
 } from "@mui/icons-material";
 import MessageSuccessfullySaved from "../../components/message-succsessfully-saved/MessageSuccsessfullySaved";
 import MessageUnauthorized from "../../components/message-unauthorized/MessageUnauthorized";
-import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import {
     baseUrl,
     getPatchParametersWithCookies,
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Region = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
     const [name, setName] = React.useState('')
 
-    const [authToken] = useContext(AuthContext)
-
+    useEffect(refreshAuthCookie, [])
     useEffect(() => {
         backdropOpen()
         fetch(`${baseUrl}/regions/${id}`, standardGetRequestWithoutCookies)
@@ -53,9 +50,6 @@ const Region = () => {
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
     const saveRegion = () => {
-        setSnackbarErrorOpen(true)
-        return
-        // TODO: wait until endpoint will be updated
         const reqBody = {
             name: name,
         }
@@ -99,7 +93,6 @@ const Region = () => {
         setBackdropVisible(true);
     };
 
-    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
@@ -149,9 +142,6 @@ const Region = () => {
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
                         {isMessageUnauthorized && <MessageUnauthorized />}
                     </Grid>
-                    <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
-                        Данный функционал не реализован на серверной стороне
-                    </SnackbarError>
                 </Stack>
             </Grid>
         </Grid>

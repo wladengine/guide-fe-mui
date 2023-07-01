@@ -27,12 +27,13 @@ import {
     getPostParametersWithCookies,
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Object = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
 
-    const [authToken] = useContext(AuthContext)
+    useEffect(refreshAuthCookie, [])
 
     const [town, setTown] = React.useState('')
     const [link, setLink] = React.useState('')

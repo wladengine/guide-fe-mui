@@ -1,16 +1,16 @@
-import React, {useContext, useEffect} from 'react'
+import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
 import {Backdrop, Breadcrumbs, Button, CircularProgress, Link, Stack, Typography} from "@mui/material";
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const FoundationList = () => {
     const [foundations, setFoundations] = React.useState(null)
-    const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, [])
     useEffect(() => { getFoundations() }, [])
     const getFoundations = () => {
         backdropOpen()
@@ -58,11 +58,7 @@ const FoundationList = () => {
     const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
     const deleteFoundation = () => {
         closeDeleteDialog();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         backdropOpen();
         fetch(`${baseUrl}/foundations/${foundationIdToDelete}`, requestOptions)
             .then((response) => {
@@ -116,7 +112,6 @@ const FoundationList = () => {
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
-                showNewRecordButton={false}
             />
             <DialogActionConfirmation
                 onOk={deleteFoundation}

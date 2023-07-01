@@ -5,12 +5,14 @@ import DialogActionConfirmation from "../../components/dialog-action-confirmatio
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
 import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const ObjectList = () => {
     const [objects, setObjects] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, [])
     useEffect(() => { getObjects() }, [])
     const getObjects = () => {
         backdropOpen()
@@ -70,11 +72,7 @@ const ObjectList = () => {
     const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
     const deleteSegment = () => {
         closeDeleteDialog();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         backdropOpen();
         fetch(`${baseUrl}/objects/${objectIdToDelete}`, requestOptions)
             .then((response) => {

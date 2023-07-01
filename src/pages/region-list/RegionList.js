@@ -4,13 +4,13 @@ import {Backdrop, Breadcrumbs, Button, CircularProgress, Link, Stack, Typography
 import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
 import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
 import SnackbarError from "../../components/snackbar-error/SnackbarError";
-import AuthContext from "../../components/auth-context/AuthContext";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const RegionList = () => {
     const [regions, setRegions] = React.useState(null)
-    const [authToken] = useContext(AuthContext)
 
+    useEffect(refreshAuthCookie, [])
     useEffect(() => { getRegions() }, [])
     const getRegions = () => {
         backdropOpen()
@@ -41,7 +41,7 @@ const RegionList = () => {
         }))
 
     const onCreateNewRecordHandler = () => { window.location.href = `./region?id=-1` }
-    const onDeleteRecordHandler = (id) => { /*showDeleteDialog(id)*/ }
+    const onDeleteRecordHandler = (id) => { showDeleteDialog(id) }
     const onEditRecordHandler = (id) => { window.location.href = `./region?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
@@ -58,13 +58,9 @@ const RegionList = () => {
     const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
     const deleteTerm = () => {
         closeDeleteDialog();
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/javascript', token: authToken },
-            redirect: 'follow',
-        }
+        const requestOptions = getDeleteParametersWithCookies('')
         backdropOpen();
-        fetch(`${baseUrl}/terms/${termIdToDelete}`, requestOptions)
+        fetch(`${baseUrl}/regions/${termIdToDelete}`, requestOptions)
             .then((response) => {
                 backdropClose()
                 if (!response.ok) {
@@ -116,7 +112,6 @@ const RegionList = () => {
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
-                showNewRecordButton={false}
             />
             <DialogActionConfirmation
                 onOk={deleteTerm}
