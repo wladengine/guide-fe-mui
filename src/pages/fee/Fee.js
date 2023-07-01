@@ -27,25 +27,19 @@ import {refreshAuthCookie} from "../../utils/CookiesProvider";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const Actor = () => {
+const Fee = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
     const [name, setName] = React.useState('')
-    const [type, setType] = React.useState('')
-    const types = [
-        { id: 1, name: "Физическое лицо" },
-        { id: 2, name: "Юридическое лицо" }
-    ]
 
     useEffect(refreshAuthCookie, [])
     useEffect(() => {
-        fetch(`${baseUrl}/actors/${id}`, standardGetRequestWithoutCookies)
+        fetch(`${baseUrl}/fees/${id}`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
             .then((data) => {
                 setName(data.name)
-                setType({id: data.type.id, label: data.type.name })
             })
             .catch(function (error) {
                 console.log(error)
@@ -55,10 +49,9 @@ const Actor = () => {
     const [isSuccessfullySaved, setIsSuccessfullySaved] = React.useState(false)
     const [isMessageUnauthorized, setIsMessageUnauthorized] = React.useState(false)
 
-    const saveActor = () => {
+    const saveRealm = () => {
         const reqBody = {
-            name: name,
-            type: parseInt(type.id),
+            description: name,
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -67,7 +60,7 @@ const Actor = () => {
             : getPatchParametersWithCookies(reqJSON)
 
         backdropOpen()
-        const fetchUrl = isPOST ? `${baseUrl}/actors` : `${baseUrl}/actors/${id}`
+        const fetchUrl = isPOST ? `${baseUrl}/fees` : `${baseUrl}/fees/${id}`
         fetch(fetchUrl, requestOptions)
             .then((response) => {
                 if (!response.ok) {
@@ -98,11 +91,6 @@ const Actor = () => {
         setBackdropVisible(true);
     };
 
-    const optionsTypes =
-        types === null ?
-            [] :
-            types.map((val) => ({id: val.id, label: val.name }))
-
     return (
         <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
@@ -117,36 +105,21 @@ const Actor = () => {
                         <Link underline="hover" color="inherit" href="/admin">
                             Управление данными
                         </Link>
-                        <Link underline="hover" color="inherit" href="/actor-list">
-                            Инвесторы
+                        <Link underline="hover" color="inherit" href="/fee-list">
+                            Суммы
                         </Link>
                         <Typography key="3" color="text.primary">
                             {name}
                         </Typography>
                     </Breadcrumbs>
-                    <Typography variant="h5" color="text.primary">Инвестор</Typography>
+                    <Typography variant="h5" color="text.primary">Сумма</Typography>
                     <Grid item lg={12} md={12} sm={12}>
                         <FormControl fullWidth variant="standard">
-                            <Autocomplete
-                                value={type}
-                                getOptionLabel={option => option.label}
-                                onChange={(event, newValue) => {
-                                    setType(newValue);
-                                }}
-                                id={'document'}
-                                options={optionsTypes}
-                                renderInput={(params) => <TextField {...params} label={'Тип'} />}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12}>
-                        <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="actor_type">
+                            <InputLabel htmlFor="fee_name">
                                 Название
                             </InputLabel>
                             <Input
-                                id="actor_type"
+                                id="fee_name"
                                 value={name}
                                 multiline
                                 onChange={(e) => {
@@ -161,7 +134,7 @@ const Actor = () => {
                         </FormControl>
                     </Grid>
                     <Grid item lg={12} md={12} sm={12}>
-                        <Button onClick={saveActor}>
+                        <Button onClick={saveRealm}>
                             Сохранить
                         </Button>
                         {isSuccessfullySaved && <MessageSuccessfullySaved />}
@@ -173,4 +146,4 @@ const Actor = () => {
     )
 }
 
-export default Actor
+export default Fee

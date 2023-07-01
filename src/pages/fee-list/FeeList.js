@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react'
 import CrudDataGrid from "../../components/crud-data-grid/CrudDataGrid";
-import {Backdrop, Breadcrumbs, CircularProgress, Link, Stack, Typography} from "@mui/material";
-import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import {Backdrop, Breadcrumbs, Button, CircularProgress, Link, Stack, Typography} from "@mui/material";
+import {baseUrl, getDeleteParametersWithCookies, standardGetRequestWithoutCookies} from "../../globalConstants";
+import DialogActionConfirmation from "../../components/dialog-action-confirmation/DialogActionConfirmation";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
 
 const FeeList = () => {
     const [fees, setFees] = React.useState(null)
 
-    useEffect(() => {
+    useEffect(() => { getFees() }, [])
+    const getFees = () => {
         backdropOpen()
         fetch(`${baseUrl}/fees`, standardGetRequestWithoutCookies)
             .then((response) => {
@@ -19,7 +23,7 @@ const FeeList = () => {
                 console.log(error)
             })
             .finally(() => { backdropClose() })
-    }, [])
+    }
 
     const columns = [
         { field: 'name', headerName: 'Название', flex: 1 }
@@ -34,9 +38,9 @@ const FeeList = () => {
             name: { value: val.name },
         }))
 
-    const onCreateNewRecordHandler = () => {}
-    const onDeleteRecordHandler = () => {}
-    const onEditRecordHandler = (id) => {}
+    const onCreateNewRecordHandler = () => { window.location.href = `./fee?id=-1` }
+    const onDeleteRecordHandler = (id) => { showDeleteDialog(id) }
+    const onEditRecordHandler = (id) => { window.location.href = `./fee?id=${id}` }
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -45,6 +49,43 @@ const FeeList = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
+    const [objectIdToDelete, setObjectIdToDelete] = React.useState(null)
+    const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false);
+    const deleteFee = () => {
+        closeDeleteDialog();
+        const requestOptions = getDeleteParametersWithCookies('')
+        backdropOpen();
+        fetch(`${baseUrl}/fees/${objectIdToDelete}`, requestOptions)
+            .then((response) => {
+                backdropClose()
+                if (!response.ok) {
+                    if (response.status == '401') {
+                        setSnackbarErrorOpen(true)
+                    }
+                    return false
+                }
+                return true
+            })
+            .then((deleteResult) => {
+                if (deleteResult) {
+                    setSnackbarSuccessOpen(true)
+                    getFees()
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+    const showDeleteDialog = (object_id) => {
+        setObjectIdToDelete(object_id)
+        setDeleteDialogVisible(true);
+    }
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+    }
 
     return (
         <Stack spacing={2}>
@@ -69,8 +110,23 @@ const FeeList = () => {
                 onCreateNewRecordHandler={onCreateNewRecordHandler}
                 onDeleteRecordHandler={onDeleteRecordHandler}
                 onEditRecordHandler={onEditRecordHandler}
-                showNewRecordButton={false}
             />
+            <DialogActionConfirmation
+                onOk={deleteFee}
+                onCancel={closeDeleteDialog}
+                open={deleteDialogVisible}
+            >
+                Удалить выбранную запись? Данное действие будет невозможно отменить.
+            </DialogActionConfirmation>
+            <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                Запись успешно удалена
+            </SnackbarSuccess>
+            <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                Ошибка: пользователь не авторизован <br />
+                <Button href={'./login'} color="inherit" size="small">
+                    Войти
+                </Button>
+            </SnackbarError>
         </Stack>
     )
 }

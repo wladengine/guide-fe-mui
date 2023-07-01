@@ -33,6 +33,7 @@ import ActorList from "./pages/actor-list/ActorList";
 import Actor from "./pages/actor/Actor";
 import ClaimList from "./pages/claim-list/ClaimList";
 import FeeList from "./pages/fee-list/FeeList";
+import Fee from "./pages/fee/Fee";
 import Claim from "./pages/claim/Claim";
 import TermList from "./pages/term-list/TermList";
 import Term from "./pages/term/Term";
@@ -115,6 +116,7 @@ export default function App() {
                             <Route path={'/actor-list'} element={<ActorList />} />
                             <Route path={'/actor'} element={<Actor />} />
                             <Route path={'/fee-list'} element={<FeeList />} />
+                            <Route path={'/fee'} element={<Fee />} />
                             <Route path={'/claim-list'} element={<ClaimList />} />
                             <Route path={'/claim'} element={<Claim />} />
                             <Route path={'/term-list'} element={<TermList />} />

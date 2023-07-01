@@ -24,6 +24,8 @@ import {
     standardGetRequestWithoutCookies
 } from "../../globalConstants";
 import {refreshAuthCookie} from "../../utils/CookiesProvider";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 const Realm = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -103,7 +105,7 @@ const Realm = () => {
                         <Link underline="hover" color="inherit" href="/admin">
                             Управление данными
                         </Link>
-                        <Link underline="hover" color="inherit" href="/realms-list">
+                        <Link underline="hover" color="inherit" href="/realm-list">
                             Сферы для инвестирования
                         </Link>
                         <Typography key="3" color="text.primary">
