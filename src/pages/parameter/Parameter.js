@@ -33,7 +33,10 @@ const Parameter = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
 
-    const [authToken] = useContext(AuthContext)
+    const [name, setName] = React.useState('')
+    const [group, setGroup] = React.useState('')
+    const [order, setOrder] = React.useState('')
+    const [groups, setGroups] = React.useState(null)
 
     useEffect(refreshAuthCookie, [])
     useEffect(() => {
@@ -43,6 +46,7 @@ const Parameter = () => {
             })
             .then((data) => {
                 setName(data.name)
+                setOrder(data.order)
                 setGroup({id: data.group.id, label: data.group.name})
             })
             .catch(function (error) {
@@ -69,6 +73,7 @@ const Parameter = () => {
         const reqBody = {
             name: name,
             group: parseInt(group.id),
+            order: parseInt(order)
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -101,10 +106,6 @@ const Parameter = () => {
             })
             .finally(() => { backdropClose() })
     }
-
-    const [name, setName] = React.useState('')
-    const [group, setGroup] = React.useState('')
-    const [groups, setGroups] = React.useState(null)
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -163,6 +164,25 @@ const Parameter = () => {
                                 value={name}
                                 onChange={(e) => {
                                     setName(e.target.value)
+                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CreateRounded />
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12}>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="parameter_order">
+                                Порядок сортировки
+                            </InputLabel>
+                            <Input
+                                id="parameter_order"
+                                value={order}
+                                onChange={(e) => {
+                                    setOrder(e.target.value)
                                 }}
                                 startAdornment={
                                     <InputAdornment position="start">

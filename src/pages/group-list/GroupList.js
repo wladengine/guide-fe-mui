@@ -31,6 +31,7 @@ const GroupList = () => {
 
     const columns = [
         { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'order', headerName: 'Сортировка', width: 150 },
         { field: 'count', headerName: 'Число параметров', width: 150 }
     ];
     const templateRow = {
@@ -42,6 +43,7 @@ const GroupList = () => {
         groups.map((val) => Object.create(templateRow, {
             id: { value: val.id },
             name: { value: val.name },
+            order: { value: val.order },
             count: { value: val.parameters?.length ?? 0 },
         }))
 

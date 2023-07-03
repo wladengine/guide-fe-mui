@@ -36,6 +36,7 @@ const Product = () => {
     const [id, setId] = React.useState(searchParams.get('id'))
     const [name, setName] = React.useState('')
     const [shortName, setShortName] = React.useState('')
+    const [order, setOrder] = React.useState('')
     const [stages, setStages] = React.useState(null)
     const [authToken] = useContext(AuthContext)
 
@@ -48,6 +49,7 @@ const Product = () => {
             .then((data) => {
                 setName(data.name)
                 setShortName(data.short_name)
+                setOrder(data.order)
             })
             .catch(function (error) {
                 console.log(error)
@@ -75,6 +77,7 @@ const Product = () => {
         const reqBody = {
             name: name,
             short_name: shortName,
+            order: order
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -231,6 +234,25 @@ const Product = () => {
                                 value={shortName}
                                 onChange={(e) => {
                                     setShortName(e.target.value)
+                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CreateRounded />
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12}>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="product_order">
+                                Порядок сортировки
+                            </InputLabel>
+                            <Input
+                                id="product_order"
+                                value={order}
+                                onChange={(e) => {
+                                    setOrder(e.target.value)
                                 }}
                                 startAdornment={
                                     <InputAdornment position="start">

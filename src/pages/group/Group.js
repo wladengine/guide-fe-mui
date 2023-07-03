@@ -31,6 +31,8 @@ import {refreshAuthCookie} from "../../utils/CookiesProvider";
 const Group = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [id, setId] = React.useState(searchParams.get('id'))
+    const [name, setName] = React.useState('')
+    const [order, setOrder] = React.useState('')
 
     useEffect(refreshAuthCookie, [])
     useEffect(() => {
@@ -40,6 +42,7 @@ const Group = () => {
             })
             .then((data) => {
                 setName(data.name)
+                setOrder(data.order)
             })
             .catch(function (error) {
                 console.log(error)
@@ -52,6 +55,7 @@ const Group = () => {
     const saveGroup = () => {
         const reqBody = {
             name: name,
+            order: order
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
@@ -84,8 +88,6 @@ const Group = () => {
             })
             .finally(() => { backdropClose() })
     }
-
-    const [name, setName] = React.useState('')
 
     const [backdropVisible, setBackdropVisible] = React.useState(false);
     const backdropClose = () => {
@@ -128,6 +130,25 @@ const Group = () => {
                                 multiline
                                 onChange={(e) => {
                                     setName(e.target.value)
+                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CreateRounded />
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12}>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="group_order">
+                                Порядок сортировки
+                            </InputLabel>
+                            <Input
+                                id="group_order"
+                                value={order}
+                                onChange={(e) => {
+                                    setOrder(e.target.value)
                                 }}
                                 startAdornment={
                                     <InputAdornment position="start">

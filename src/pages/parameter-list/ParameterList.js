@@ -29,18 +29,21 @@ const ParameterList = () => {
 
     const columns = [
         { field: 'group', headerName: 'Группа параметров', flex: 1 },
-        { field: 'name', headerName: 'Название', flex: 1 }
+        { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'order', headerName: 'Сортировка', width: 150 }
     ];
     const templateRow = {
         id: -1,
         group: "",
         name: "",
+        order: ""
     }
     const rows = products == null ? [templateRow] :
         products.map((val) => Object.create(templateRow, {
             id: { value: val.id },
             group: { value: val.group.name },
             name: { value: val.name },
+            order: { value: val.order },
         }))
 
     const onCreateNewRecordHandler = () => { window.location.href = `./parameter?id=-1` }

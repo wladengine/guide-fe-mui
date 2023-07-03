@@ -30,18 +30,21 @@ const ProductList = () => {
 
     const columns = [
         { field: 'short_name', headerName: 'Сокращение', width: 100 },
-        { field: 'name', headerName: 'Название', flex: 1 }
+        { field: 'name', headerName: 'Название', flex: 1 },
+        { field: 'order', headerName: 'Сортировка', width: 100 }
     ];
     const templateRow = {
         id: -1,
         short_name: "",
         name: "",
+        order: "",
     }
     const rows = products == null ? [templateRow] :
         products.map((val) => Object.create(templateRow, {
             id: { value: val.id },
             short_name: { value: val.short_name },
             name: { value: val.name },
+            order: { value: val.order },
         }))
 
     const onCreateNewRecordHandler = () => { window.location.href = `./product?id=-1` }
