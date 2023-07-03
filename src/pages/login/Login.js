@@ -10,7 +10,7 @@ import {
     IconButton,
     Button,
     Typography,
-    Divider,
+    Divider, CircularProgress, Backdrop,
 } from "@mui/material";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
 import {baseUrl, getPostParametersWithCookies} from "../../globalConstants";
@@ -20,6 +20,8 @@ const Login = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [showPassword, setShowPassword] = React.useState(false)
+    const [backdropVisible, setBackdropVisible] = React.useState(false)
+
     const handleClickShowPassword = () =>
         setShowPassword((show) => !show);
 
@@ -27,6 +29,7 @@ const Login = () => {
         event.preventDefault();
     };
     const makeAuth = () => {
+        backdropOpen()
         const requestOptions = getPostParametersWithCookies(`{ "Email": "${email}", "Pass": "${password}" }`)
         fetch(`${baseUrl}/login`, requestOptions)
             .then((response) => {
@@ -41,10 +44,24 @@ const Login = () => {
             .catch(function (error) {
                 console.log(error)
             })
+            .finally(() => { backdropClose() })
     }
+    const backdropClose = () => {
+        setBackdropVisible(false);
+    };
+    const backdropOpen = () => {
+        setBackdropVisible(true);
+    };
+
     return (
         <Container maxWidth="sm">
             <Stack spacing={2}>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={backdropVisible}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
                 <Typography variant="h5" color="text.primary">Вход на сайт</Typography>
                 <FormControl variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Имя пользователя</InputLabel>
