@@ -15,6 +15,8 @@ import {
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
 import {baseUrl, getPostParametersWithCookies} from "../../globalConstants";
 import {refreshAuthCookie} from "../../utils/CookiesProvider";
+import SnackbarSuccess from "../../components/snackbar-success/SnackbarSuccess";
+import SnackbarError from "../../components/snackbar-error/SnackbarError";
 
 const Login = () => {
     useEffect(refreshAuthCookie, [])
@@ -35,12 +37,12 @@ const Login = () => {
         fetch(`${baseUrl}/login`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
-                    alert('Error while auth')
+                    setSnackbarErrorOpen(true)
                     return null
                 }
+                setSnackbarSuccessOpen(true)
             })
             .then((data) => {
-                console.log(data, 'data')
             })
             .catch(function (error) {
                 console.log(error)
@@ -53,6 +55,9 @@ const Login = () => {
     const backdropOpen = () => {
         setBackdropVisible(true);
     };
+
+    const [snackbarSuccessOpen, setSnackbarSuccessOpen] = React.useState(false)
+    const [snackbarErrorOpen, setSnackbarErrorOpen] = React.useState(false)
 
     return (
         <Container maxWidth="sm">
@@ -110,6 +115,12 @@ const Login = () => {
                     />
                 </FormControl>
                 <Button onClick={makeAuth}>Войти</Button>
+                <SnackbarSuccess open={snackbarSuccessOpen} onClose={() => { setSnackbarSuccessOpen(false)}}>
+                    Аутентификация прошла успешно.
+                </SnackbarSuccess>
+                <SnackbarError open={snackbarErrorOpen} onClose={() => { setSnackbarErrorOpen(false)}}>
+                    Ошибка при аутентификации
+                </SnackbarError>
             </Stack>
         </Container>
     )
