@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, {useContext, useEffect} from 'react'
 import AuthContext from "../../components/auth-context/AuthContext";
 import {
     Container,
@@ -14,9 +14,10 @@ import {
 } from "@mui/material";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
 import {baseUrl, getPostParametersWithCookies} from "../../globalConstants";
+import {refreshAuthCookie} from "../../utils/CookiesProvider";
 
 const Login = () => {
-    const [authToken, setAuthToken] = useContext(AuthContext)
+    useEffect(refreshAuthCookie, [])
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [showPassword, setShowPassword] = React.useState(false)
