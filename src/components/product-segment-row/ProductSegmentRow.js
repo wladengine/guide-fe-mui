@@ -1,7 +1,7 @@
 import ProductSegmentRowData from "../product-segment-row-data/ProductSegmentRowData";
 import React from "react";
 
-const ProductSegmentRow = ({val, productParams, foundFeatures}) => {
+const ProductSegmentRow = ({val, productParams, foundFeatures, productDocumentsCache}) => {
     const rowHeader = (
         <td style={{ width: '20%', verticalAlign: "top", padding: 5 }} key={val.id}>
             <b>{val.name}</b>
@@ -17,6 +17,7 @@ const ProductSegmentRow = ({val, productParams, foundFeatures}) => {
                     productId={prod}
                     val={val}
                     foundFeatures={foundFeatures}
+                    productDocumentsCache={productDocumentsCache}
                 />)
     return (
         <tr>

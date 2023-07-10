@@ -21,6 +21,7 @@ const Dashboard = () => {
     const [productParams, setProductParams] = React.useState([])
     const [collapsedMenuItems, setCollapsedMenuItems] = React.useState([])
     const [excelUrl, setExcelUrl] = React.useState(null)
+    const [productDocumentsCache, setProductDocumentsCache] = React.useState({});
 
     useEffect(() => {
         fetch(`${baseUrl}/groups`, standardGetRequestWithoutCookies)
@@ -66,6 +67,7 @@ const Dashboard = () => {
                 hasValidFilters = true
                 productParams.forEach((val, index) => {
                     urlDocumentFilters = urlDocumentFilters + `&product_id=${val}`
+                    cacheDocumentsForProduct(val)
                 })
             }
             if (typeof filterParams != 'undefined' && filterParams.length > 0) {
@@ -97,6 +99,34 @@ const Dashboard = () => {
                 .finally(() => backdropClose())
         }
     }, [filterParams, productParams])
+
+    const cacheDocumentsForProduct = (productId) => {
+        const cached = getDataFromProductDocumentsCache(productId)
+        if (!cached) {
+            fetch(`${baseUrl}/products/${productId}/documents`, standardGetRequestWithoutCookies)
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    addToProductDocumentsCache(productId, data)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+                .finally(() => backdropClose())
+        }
+    }
+
+    const addToProductDocumentsCache = (key, value) => {
+        setProductDocumentsCache(prevCache => ({
+            ...prevCache,
+            [key]: value,
+        }))
+    }
+
+    const getDataFromProductDocumentsCache = (key) => {
+        return productDocumentsCache[key] || null
+    }
 
     const updateFilterParams = (paramId) => {
         if (typeof filterParams == 'undefined') {
@@ -202,6 +232,7 @@ const Dashboard = () => {
                     val={val}
                     productParams={productParams}
                     foundFeatures={foundFeatures}
+                    productDocumentsCache={productDocumentsCache}
                 />
             )
 
