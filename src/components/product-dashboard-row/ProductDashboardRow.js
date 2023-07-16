@@ -23,13 +23,8 @@ docs["16"] = "779-PP.pdf";
 
 const ProductDashboardRow = ({product, filteredFeatures}) => {
     const documentsData = filteredFeatures
-        .map((v) => v.segments)
-        .filter((s) => s !== undefined)
-        .flat()
-        .map(s => s.document)
-        .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos)
 
-    console.log(documentsData)
+    // console.log(documentsData)
 
     const documents = documentsData.map((d) => {
         return (

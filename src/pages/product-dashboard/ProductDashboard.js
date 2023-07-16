@@ -11,36 +11,60 @@ import Typography from "@mui/material/Typography";
 import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
 
 const ProductDashboard = () => {
-    const [features, setFeatures] = React.useState(null)
+    const [products, setProducts] = React.useState(null)
+    const [productDocumentsCache, setProductDocumentsCache] = React.useState({});
     useEffect(() => {
-        backdropOpen();
-        fetch(`${baseUrl}/features`, standardGetRequestWithoutCookies)
+        fetch(`${baseUrl}/products`, standardGetRequestWithoutCookies)
             .then((response) => {
                 return response.json()
             })
             .then((data) => {
-                setFeatures(data)
+                setProducts(data)
+                data.forEach((val, index) => {
+                    cacheDocumentsForProduct(val.id)
+                })
             })
             .catch(function (error) {
                 console.log(error)
             })
-            .finally(() => backdropClose())
     }, [])
+    const cacheDocumentsForProduct = (productId) => {
+        const cached = getDataFromProductDocumentsCache(productId)
+        if (!cached) {
+            fetch(`${baseUrl}/products/${productId}/documents`, standardGetRequestWithoutCookies)
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    addToProductDocumentsCache(productId, data)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+                .finally(() => backdropClose())
+        }
+    }
 
-    const GetAllUniqueParameters = () =>
-        features && features
-            .map((v) => v.product)
-            .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos)
+    const addToProductDocumentsCache = (key, value) => {
+        setProductDocumentsCache(prevCache => ({
+            ...prevCache,
+            [key]: value,
+        }))
+    }
+    const getDataFromProductDocumentsCache = (key) => {
+        return productDocumentsCache[key] || null
+    }
 
     const termsRows =
-        features && GetAllUniqueParameters()
+        products && products
         .map((val, index) =>
+            getDataFromProductDocumentsCache(val.id) === null ? <></> :
             <ProductDashboardRow
                 key={index}
                 product={val}
                 filteredFeatures={
-                    features
-                        .filter((item) => item.product.id === val.id)
+                    getDataFromProductDocumentsCache(val.id)
+                    //features.filter((item) => item.product.id === val.id)
                         //.map((v) => v.parameter)
                 }
             />)

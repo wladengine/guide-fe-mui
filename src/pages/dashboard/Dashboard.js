@@ -128,6 +128,7 @@ const Dashboard = () => {
         return productDocumentsCache[key] || null
     }
 
+    const isFilterParamsEmpty = () => !filterParams || filterParams.length === 0
     const updateFilterParams = (paramId) => {
         if (typeof filterParams == 'undefined') {
             console.log(`updateFilterParams(${filterParams}): typeof filterParams == 'undefined'`)
@@ -219,13 +220,15 @@ const Dashboard = () => {
                 )
             })
 
-    const GetAllUniqueParameters = () =>
-        foundFeatures && foundFeatures
-            .map((v) => v.parameter)
-            .filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos)
+    const GetAllUniqueParametersNew = () =>
+        groups && groups
+            .map((v) => v.parameters)
+            .flat()
+            .filter(item => isFilterParamsEmpty() || filterParams.includes(item.id))
+            .sort((a, b) => a.id - b.id)
 
     const foundFeaturesList =
-        foundFeatures && GetAllUniqueParameters()
+        foundFeatures && GetAllUniqueParametersNew()
             .map((val, index) =>
                 <ProductSegmentRow
                     key={index}
