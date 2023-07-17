@@ -55,7 +55,7 @@ const Group = () => {
     const saveGroup = () => {
         const reqBody = {
             name: name,
-            order: order
+            order: parseInt(order)
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0

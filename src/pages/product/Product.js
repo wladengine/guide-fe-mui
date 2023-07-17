@@ -77,7 +77,7 @@ const Product = () => {
         const reqBody = {
             name: name,
             short_name: shortName,
-            order: order
+            order: parseInt(order)
         }
         const reqJSON = JSON.stringify(reqBody)
         const isPOST = (id ?? -1) <= 0
