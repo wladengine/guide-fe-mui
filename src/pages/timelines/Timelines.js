@@ -8,6 +8,8 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import css from "../dashboard/dashboard.module.css";
 import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import DownloadIcon from "@mui/icons-material/Download";
+import Button from "@mui/material/Button";
 
 const Timelines = () => {
     const [products, setProducts] = React.useState(null)
@@ -68,7 +70,6 @@ const Timelines = () => {
             {productsList}
         </FormGroup>
     )
-
     const selectedProductColumns =
         productParams.filter((x) => x > 0).length > 0 && products != null ? (
             productParams
@@ -96,11 +97,17 @@ const Timelines = () => {
         productParams.filter((x) => x > 0).length > 0 && products != null ? (
             productParams
                 .filter((x) => x > 0)
-                .map((val, index) => {
-                    const data = GetTimelinesByProduct(val);
+                .map((productId, index) => {
+                    const data = GetTimelinesByProduct(productId);
+                    const excelUrl = `${baseUrl}/products/${productId}/stages/stream`
                     return (
                         <td key={index} style={{ verticalAlign: "top", padding: 5, minWidth: 500 }}>
                             <Card>
+                                <FormGroup>
+                                    <Button href={excelUrl} startIcon={<DownloadIcon />}>
+                                        Скачать excel
+                                    </Button>
+                                </FormGroup>
                                 <CardContent>
                                     <ProductTimeline data={data} />
                                 </CardContent>

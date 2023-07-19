@@ -228,7 +228,7 @@ const Dashboard = () => {
             .sort((a, b) => a.id - b.id)
 
     const foundFeaturesList =
-        foundFeatures && GetAllUniqueParametersNew()
+        productParams.length > 0 && GetAllUniqueParametersNew()
             .map((val, index) =>
                 <ProductSegmentRow
                     key={index}
