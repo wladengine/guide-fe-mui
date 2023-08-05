@@ -5,6 +5,9 @@ import AutocompleteCombobox from "../../components/autocomplete-combobox/Autocom
 import Stack from "@mui/material/Stack";
 import MapSearchResult from "../../components/map-search-result/MapSearchResult";
 import {baseUrl, standardGetRequestWithoutCookies} from "../../globalConstants";
+import PlaceIcon from '@mui/icons-material/Place';
+import { green, yellow } from '@mui/material/colors';
+import {Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 
 function getRegionOptions(regions) {
     return regions && regions
@@ -167,6 +170,36 @@ const Map = () => {
     return (
         <>
             <iframe src={'map.html'} className={css.map}></iframe>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <nav aria-label="main mailbox folders">
+                    <List>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <PlaceIcon color="primary"/>
+                                </ListItemIcon>
+                                <ListItemText primary="Оособые экономические зоны" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <PlaceIcon  sx={{ color: yellow['A700'] }} />
+                                </ListItemIcon>
+                                <ListItemText primary="Территории опережающего развития" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <PlaceIcon color="secondary" />
+                                </ListItemIcon>
+                                <ListItemText primary="Инновационные научно-технологические центры" />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                </nav>
+            </Box>
             <SearchBlock />
         </>
     )
