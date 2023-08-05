@@ -8,6 +8,7 @@ RUN npm install
 
 COPY . .
 
+RUN npx update-browserslist-db@latest
 RUN npm run build
 
 EXPOSE 3000
