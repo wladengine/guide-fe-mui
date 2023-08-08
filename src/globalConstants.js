@@ -44,3 +44,17 @@ export const getDeleteParametersWithCookies = (reqJSON) => ({
     body: reqJSON,
     redirect: 'follow',
 })
+
+export const docs = {};
+// Adding key-value pairs
+docs["1"] = "115-fz.pdf";
+docs["3"] = "473-fz.pdf";
+docs["4"] = "224-fz.pdf";
+docs["9"] = "69-fz.pdf";
+docs["10"] = "116-fz.pdf";
+docs["11"] = "1048-PP.pdf";
+docs["12"] = "488-fz.pdf";
+docs["13"] = "216-fz.pdf";
+docs["14"] = "1863-PP.pdf";
+docs["15"] = "794-PP.pdf";
+docs["16"] = "779-PP.pdf";
